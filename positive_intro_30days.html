@@ -235,6 +235,47 @@
             .flip-leaf { width: 100%; }
         }
 
+        /* 책을 펼칠 때 종이가 촤라라락 넘어가는 효과 */
+        .flip-leaf.riffle-leaf {
+            right: 0;
+            transform-origin: left center;
+            animation: riffleLeaf var(--riffle-dur, 0.42s) cubic-bezier(0.5, 0.05, 0.3, 1) both;
+            animation-delay: var(--riffle-delay, 0s);
+        }
+
+        .riffle-leaf .flip-leaf-front,
+        .riffle-leaf .flip-leaf-back {
+            padding: 2.5rem 2rem;
+            justify-content: center;
+            gap: 1.6rem;
+        }
+
+        .riffle-line {
+            border-bottom: 1px solid rgba(92, 58, 30, 0.22);
+            height: 1px;
+        }
+
+        @keyframes riffleLeaf {
+            0% {
+                transform: rotateY(0deg);
+                z-index: calc(90 - var(--riffle-i, 0));
+                box-shadow: -3px 6px 14px rgba(36, 23, 14, 0.16);
+            }
+            49.9% {
+                z-index: calc(90 - var(--riffle-i, 0));
+            }
+            50% {
+                transform: rotateY(-90deg) skewY(-2.5deg);
+                z-index: calc(60 + var(--riffle-i, 0));
+                box-shadow: -18px 14px 34px rgba(36, 23, 14, 0.34);
+            }
+            100% {
+                transform: rotateY(-180deg);
+                z-index: calc(60 + var(--riffle-i, 0));
+                box-shadow: 3px 6px 14px rgba(36, 23, 14, 0.12);
+            }
+        }
+
         /* 마법 깃펜 손글씨 입력창 */
         .magic-input {
             font-family: 'Nanum Pen Script', cursive;
@@ -1567,7 +1608,49 @@
                 loadDayData(currentDay);
                 updateOverallProgress();
                 lucide.createIcons();
+                playOpeningRiffle();
             }, 650);
+        }
+
+        // 책이 펼쳐질 때 종이가 촤라라락 넘어가다가 첫 페이지에서 멈추는 효과
+        function playOpeningRiffle() {
+            const container = document.getElementById('flip-animation-container');
+            if (!container || isFlipping) return;
+            isFlipping = true;
+
+            const COUNT = 18;
+            const SLOW_FROM = COUNT - 5;
+            const lines = '<div class="riffle-line"></div>'.repeat(9);
+            const leaves = [];
+            let endTime = 0;
+
+            for (let i = 0; i < COUNT; i++) {
+                // 처음엔 빠르게 연달아 넘어가고, 마지막 몇 장은 점점 느려지며 멈춘다
+                const tail = Math.max(0, i - SLOW_FROM);
+                const delay = i * 42 + tail * tail * 20;
+                const dur = 400 + tail * 45;
+                endTime = Math.max(endTime, delay + dur);
+
+                const leaf = document.createElement('div');
+                leaf.className = 'flip-leaf riffle-leaf';
+                leaf.style.setProperty('--riffle-i', i);
+                leaf.style.setProperty('--riffle-delay', delay + 'ms');
+                leaf.style.setProperty('--riffle-dur', dur + 'ms');
+                leaf.innerHTML = `
+                    <div class="flip-leaf-front">${lines}
+                        <div class="flip-leaf-shade" style="background: linear-gradient(90deg, rgba(36,23,14,0.16) 0%, transparent 40%);"></div>
+                    </div>
+                    <div class="flip-leaf-back">${lines}
+                        <div class="flip-leaf-shade" style="background: linear-gradient(270deg, rgba(36,23,14,0.16) 0%, transparent 40%);"></div>
+                    </div>`;
+                container.appendChild(leaf);
+                leaves.push(leaf);
+            }
+
+            setTimeout(() => {
+                leaves.forEach(l => l.remove());
+                isFlipping = false;
+            }, endTime + 60);
         }
 
         function closeBook() {
