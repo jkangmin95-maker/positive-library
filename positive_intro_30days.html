@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>긍정학개론 - 30일 마법 챌린지 노트</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: 우아한 명조 및 신비로운 손글씨 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --gold-primary: #d4af37;
+            --gold-light: #fcf6ba;
+            --gold-dark: #996515;
+            --navy-deep: #13213c;
+            --navy-mid: #1d3258;
+            --parchment-bg: #f6ecd7;
+            --ink-color: #1c120a;
+            --ink-glow: rgba(28, 18, 10, 0.12);
+        }
+
+        /* 마법 금빛 잉크 테마 */
+        .theme-gold-ink {
+            --ink-color: #7a4900;
+            --ink-glow: rgba(212, 175, 55, 0.55);
+        }
+
+        /* 에메랄드 잉크 테마 */
+        .theme-emerald-ink {
+            --ink-color: #134e3a;
+            --ink-glow: rgba(19, 78, 58, 0.25);
+        }
+
+        body {
+            font-family: 'Gowun Batang', serif;
+            background: radial-gradient(circle at center, #141d30 0%, #090d16 100%);
+            color: #e5dec9;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+            user-select: none;
+        }
+
+        /* 배경 금빛 먼지 파티클 캔버스 */
+        #magic-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 3D 책 컨테이너 원근감 */
+        .scene {
+            perspective: 2200px;
+            z-index: 10;
+        }
+
+        .book-wrapper {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .floating {
+            animation: floatBook 4.5s ease-in-out infinite;
+        }
+
+        @keyframes floatBook {
+            0%, 100% { transform: translateY(0px) rotateX(4deg) rotateY(-4deg); }
+            50% { transform: translateY(-14px) rotateX(1deg) rotateY(4deg); }
+        }
+
+        /* 딥 네이비 & 금박 클래식 양장본 표지 */
+        .book-cover {
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08), transparent 60%),
+                repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.14) 0px, rgba(0, 0, 0, 0.14) 2px, transparent 2px, transparent 4px),
+                linear-gradient(135deg, #1e3154 0%, #101c33 100%);
+            box-shadow:
+                -14px 18px 38px rgba(0, 0, 0, 0.85),
+                inset 4px 0 12px rgba(255, 255, 255, 0.14),
+                inset -3px 0 8px rgba(0, 0, 0, 0.85),
+                0 0 45px rgba(212, 175, 55, 0.18);
+            border: 1px solid #2e4875;
+            border-left: 16px solid #0b1324;
+            border-radius: 4px 14px 14px 4px;
+            transform-origin: left center;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.8s ease;
+            cursor: pointer;
+        }
+
+        .book-cover:hover {
+            box-shadow:
+                -14px 22px 48px rgba(0, 0, 0, 0.92),
+                inset 4px 0 14px rgba(255, 255, 255, 0.2),
+                0 0 60px rgba(212, 175, 55, 0.32);
+        }
+
+        /* 금박 텍스트 효과 */
+        .gold-foil {
+            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 45%, #b38728 70%, #fbf5b7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.45);
+            font-family: 'Nanum Myeongjo', serif;
+        }
+
+        .gold-border {
+            border-color: rgba(212, 175, 55, 0.55);
+            box-shadow: inset 0 0 16px rgba(212, 175, 55, 0.14), 0 0 16px rgba(212, 175, 55, 0.14);
+        }
+
+        .book-cover.opened {
+            transform: rotateY(-165deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 밝고 선명한 고대비 양피지 내지 */
+        .parchment-book {
+            background-color: #f6ecd7;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)' opacity='0.065'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 50% 50%, #faf3e4 0%, #f4e8ce 65%, #e8d5b0 100%);
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.85),
+                inset 0 0 42px rgba(201, 177, 134, 0.72),
+                inset 0 0 12px rgba(139, 102, 53, 0.25),
+                0 0 0 6px #13213c,
+                0 0 0 8px #b38728;
+            color: #24170e;
+            border-radius: 6px 12px 12px 6px;
+            position: relative;
+            perspective: 2200px;
+            transform-style: preserve-3d;
+        }
+
+        /* 책 중앙 제본선 그림자 */
+        @media (min-width: 768px) {
+            .book-spine-shadow::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 64px;
+                background: linear-gradient(90deg,
+                    rgba(0, 0, 0, 0) 0%,
+                    rgba(92, 58, 30, 0.08) 35%,
+                    rgba(46, 28, 14, 0.26) 50%,
+                    rgba(92, 58, 30, 0.08) 65%,
+                    rgba(0, 0, 0, 0) 100%);
+                pointer-events: none;
+                z-index: 15;
+            }
+        }
+
+        /* 입체 3D 책장 넘김 종이 리프 */
+        .flip-leaf {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 45;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        .flip-leaf-front,
+        .flip-leaf-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            background-color: #f6ecd7;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)' opacity='0.07'/%3E%3C/svg%3E"),
+                linear-gradient(135deg, #faf4e6 0%, #ead8b5 100%);
+            box-shadow: inset 0 0 30px rgba(180, 145, 95, 0.45);
+            overflow: hidden;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .flip-leaf-front {
+            border-radius: 4px 12px 12px 4px;
+            border-left: 1px solid rgba(92, 58, 30, 0.25);
+        }
+
+        .flip-leaf-back {
+            transform: rotateY(180deg);
+            border-radius: 12px 4px 4px 12px;
+            border-right: 1px solid rgba(92, 58, 30, 0.25);
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)' opacity='0.07'/%3E%3C/svg%3E"),
+                linear-gradient(225deg, #f8f0de 0%, #e4cfa8 100%);
+        }
+
+        .flip-next {
+            right: 0;
+            transform-origin: left center;
+            animation: flipPageNext 0.85s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+        }
+
+        @keyframes flipPageNext {
+            0% { transform: rotateY(0deg); box-shadow: -4px 8px 20px rgba(36, 23, 14, 0.18); }
+            45% { box-shadow: -22px 18px 45px rgba(36, 23, 14, 0.38); }
+            100% { transform: rotateY(-180deg); box-shadow: 4px 8px 20px rgba(36, 23, 14, 0.15); }
+        }
+
+        .flip-prev {
+            left: 0;
+            transform-origin: right center;
+            animation: flipPagePrev 0.85s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+        }
+
+        @keyframes flipPagePrev {
+            0% { transform: rotateY(0deg); box-shadow: 4px 8px 20px rgba(36, 23, 14, 0.18); }
+            45% { box-shadow: 22px 18px 45px rgba(36, 23, 14, 0.38); }
+            100% { transform: rotateY(180deg); box-shadow: -4px 8px 20px rgba(36, 23, 14, 0.15); }
+        }
+
+        @media (max-width: 767px) {
+            .flip-leaf { width: 100%; }
+        }
+
+        /* 마법 깃펜 손글씨 입력창 */
+        .magic-input {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 1.55rem;
+            line-height: 1.42;
+            color: var(--ink-color);
+            text-shadow: 0 0 4px var(--ink-glow);
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid rgba(92, 58, 30, 0.35);
+            transition: all 0.3s ease;
+            width: 100%;
+            padding: 3px 6px;
+            user-select: text;
+        }
+
+        .magic-input:focus {
+            outline: none;
+            border-bottom: 2px solid #1b2c4a;
+            background: rgba(255, 250, 238, 0.72);
+            border-radius: 4px 4px 0 0;
+            text-shadow: 0 0 8px var(--ink-glow);
+        }
+
+        .magic-input::placeholder {
+            font-family: 'Gowun Batang', serif;
+            font-size: 0.85rem;
+            color: #7d6244;
+            opacity: 0.78;
+            text-shadow: none;
+        }
+
+        @keyframes inkAppear {
+            0% {
+                text-shadow: 0 0 12px rgba(212, 175, 55, 0.85), 0 0 3px #996515;
+                filter: brightness(1.15);
+            }
+            100% {
+                text-shadow: 0 0 4px var(--ink-glow);
+                filter: brightness(1);
+            }
+        }
+
+        .ink-writing {
+            animation: inkAppear 0.55s ease-out;
+        }
+
+        /* 긍정 주문 원클릭 칩 버튼 */
+        .spell-chip {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .spell-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(27, 44, 74, 0.25);
+        }
+        .spell-chip:active {
+            transform: scale(0.95);
+        }
+
+        /* 밀랍 도장 스타일 */
+        .wax-seal-btn {
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .wax-seal-btn:hover {
+            transform: scale(1.04);
+        }
+        @keyframes stampDrop {
+            0% { transform: scale(1.8) rotate(-18deg); opacity: 0; }
+            60% { transform: scale(0.92) rotate(4deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .wax-stamped {
+            animation: stampDrop 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* 오늘의 실천 정도 점수 체크 버튼 */
+        .score-pill {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .score-pill:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 양피지 모서리 말림 */
+        .page-corner {
+            position: absolute;
+            bottom: 0;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            z-index: 25;
+            transition: all 0.3s ease;
+        }
+        .page-corner-right {
+            right: 0;
+            background: linear-gradient(315deg, rgba(166, 138, 98, 0.45) 45%, rgba(255, 255, 255, 0.6) 50%, transparent 52%);
+            border-bottom-right-radius: 12px;
+        }
+        .page-corner-right:hover {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(315deg, rgba(180, 142, 75, 0.65) 45%, rgba(255, 250, 235, 0.85) 50%, transparent 52%);
+        }
+        .page-corner-left {
+            left: 0;
+            background: linear-gradient(45deg, rgba(166, 138, 98, 0.45) 45%, rgba(255, 255, 255, 0.6) 50%, transparent 52%);
+            border-bottom-left-radius: 6px;
+        }
+        .page-corner-left:hover {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(45deg, rgba(180, 142, 75, 0.65) 45%, rgba(255, 250, 235, 0.85) 50%, transparent 52%);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(226, 209, 179, 0.3); }
+        ::-webkit-scrollbar-thumb { background: rgba(153, 101, 21, 0.45); border-radius: 9999px; }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-modal {
+            animation: fadeInScale 0.25s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-3 sm:p-6 relative">
+
+    <!-- 배경 금빛 먼지 파티클 -->
+    <canvas id="magic-particles"></canvas>
+
+    <!-- 메인 3D 씬 컨테이너 -->
+    <div class="scene w-full max-w-5xl flex flex-col items-center justify-center my-auto">
+
+        <!-- =========================================================
+             1단계: 첫 화면 - 긍정학개론 클래식 네이비 & 금박 표지
+        ========================================================= -->
+        <div id="cover-view" class="book-wrapper floating w-full max-w-[360px] sm:max-w-[420px] aspect-[3/4.2] flex items-center justify-center">
+            <div id="book-cover" onclick="openBook()" class="book-cover w-full h-full p-6 sm:p-10 flex flex-col justify-between items-center text-center relative select-none">
+                
+                <!-- 금박 테두리 장식 -->
+                <div class="w-full h-full border-2 gold-border rounded-lg p-5 sm:p-7 flex flex-col justify-between items-center relative">
+                    
+                    <!-- 상단 신전 기둥 & 열쇠 문양 SVG (원작 책 표지 오마주) -->
+                    <div class="mt-2 opacity-95 flex flex-col items-center gap-1.5">
+                        <svg width="50" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M32 6L54 18H10L32 6Z" stroke="#d4af37" stroke-width="1.6" fill="rgba(212,175,55,0.18)"/>
+                            <rect x="13" y="18" width="38" height="3" fill="#d4af37"/>
+                            <line x1="18" y1="21" x2="18" y2="44" stroke="#fcf6ba" stroke-width="2.2"/>
+                            <line x1="27" y1="21" x2="27" y2="44" stroke="#fcf6ba" stroke-width="2.2"/>
+                            <line x1="37" y1="21" x2="37" y2="44" stroke="#fcf6ba" stroke-width="2.2"/>
+                            <line x1="46" y1="21" x2="46" y2="44" stroke="#fcf6ba" stroke-width="2.2"/>
+                            <rect x="11" y="44" width="42" height="3.5" fill="#d4af37"/>
+                            <rect x="8" y="48" width="48" height="3" fill="#b38728"/>
+                        </svg>
+                        <span class="text-[10px] tracking-[0.25em] text-[#fcf6ba]/75 uppercase">30-Day Practice Workbook</span>
+                    </div>
+
+                    <!-- 중앙 금박 타이틀 -->
+                    <div class="my-auto space-y-3.5">
+                        <div class="w-36 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto"></div>
+                        <p class="text-xs tracking-[0.24em] text-[#fcf6ba]/85 font-semibold">30일 마법 실천 워크북</p>
+                        <h1 class="gold-foil text-4xl sm:text-5xl font-extrabold tracking-wider leading-tight py-1">
+                            긍정학개론
+                        </h1>
+                        <p class="gold-foil text-sm sm:text-base font-bold tracking-wide leading-snug">
+                            인생의 모든 문제를 해결하는<br>단 하나의 열쇠
+                        </p>
+                        <div class="w-36 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto"></div>
+                    </div>
+
+                    <!-- 하단 클릭 안내 문구 -->
+                    <div class="mb-1 space-y-2">
+                        <p class="text-xs sm:text-sm text-[#fcf6ba]/85 animate-pulse tracking-widest">
+                            ✦ 표지를 터치하여 30일 여정을 시작하세요 ✦
+                        </p>
+                        <p class="text-[11px] text-[#d4af37]/65 tracking-widest">BASED ON 긍정학개론</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             2단계: 펼쳐진 긍정학개론 30일 챌린지 양피지 노트
+        ========================================================= -->
+        <div id="planner-view" class="hidden w-full flex-col items-center animate-modal">
+            
+            <!-- 상단 마법 도구 바 -->
+            <div class="w-full max-w-5xl mb-3 sm:mb-4 px-3 py-2.5 rounded-2xl bg-[#111c33]/90 backdrop-blur-md border border-[#d4af37]/35 shadow-xl flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+                
+                <!-- 좌측: 표지 닫기 & 30일 커리큘럼 목차 -->
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <button onclick="closeBook()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1d3054] hover:bg-[#27406e] text-[#fcf6ba] border border-[#d4af37]/30 transition cursor-pointer" title="책 표지로 돌아가기">
+                        <i data-lucide="book" class="w-4 h-4 text-[#d4af37]"></i>
+                        <span class="hidden sm:inline">표지 닫기</span>
+                    </button>
+                    <button onclick="toggleCurriculumModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1d3054] hover:bg-[#27406e] text-[#fcf6ba] border border-[#d4af37]/30 transition cursor-pointer" title="30일 챌린지 전체 여정 보기">
+                        <i data-lucide="map" class="w-4 h-4 text-[#d4af37]"></i>
+                        <span>30일 여정 목차</span>
+                    </button>
+                </div>
+
+                <!-- 중앙: Day 1 ~ Day 30 이동 컨트롤 -->
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <button onclick="changeDay(-1)" class="p-1.5 rounded-lg hover:bg-[#d4af37]/20 text-[#fcf6ba] transition cursor-pointer" title="이전 Day로 책장 넘기기">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <select id="day-selector" onchange="onDaySelected(this.value)"
+                            class="bg-[#182744] text-[#fcf6ba] border border-[#d4af37]/45 rounded-xl px-3 py-1 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#d4af37] cursor-pointer">
+                    </select>
+
+                    <button onclick="changeDay(1)" class="p-1.5 rounded-lg hover:bg-[#d4af37]/20 text-[#fcf6ba] transition cursor-pointer" title="다음 Day로 책장 넘기기">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- 우측: 마법 잉크 변경 & 새로 쓰기 -->
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <button id="ink-toggle-btn" onclick="toggleInkTheme()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1d3054] hover:bg-[#27406e] text-[#fcf6ba] border border-[#d4af37]/30 transition cursor-pointer" title="마법 잉크 색상 전환">
+                        <i data-lucide="feather" class="w-4 h-4 text-[#d4af37]"></i>
+                        <span id="ink-label">딥 세피아 잉크</span>
+                    </button>
+
+                    <button onclick="openResetConfirm()" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-red-950/60 hover:bg-red-900/70 text-red-200 border border-red-500/35 transition cursor-pointer flex items-center gap-1" title="현재 Day 기록 초기화">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                        <span class="hidden md:inline text-xs">초기화</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 펼쳐진 양피지 책 본문 -->
+            <div id="parchment-book" class="parchment-book book-spine-shadow w-full max-w-5xl min-h-[670px] p-5 sm:p-8 md:p-10 transition-all duration-300 relative overflow-hidden">
+                
+                <!-- 3D 페이지 넘김 애니메이션 레이어 -->
+                <div id="flip-animation-container"></div>
+
+                <!-- 양피지 좌/우 하단 모서리 클릭 넘김 영역 -->
+                <div onclick="changeDay(-1)" class="page-corner page-corner-left" title="이전 Day로 책장 넘기기"></div>
+                <div onclick="changeDay(1)" class="page-corner page-corner-right" title="다음 Day로 책장 넘기기"></div>
+
+                <!-- 상단 헤더: 챕터 배지 & Day 타이틀 & 진행도 게이지 -->
+                <div class="border-b-2 border-[#8b6635]/35 pb-4 mb-6 flex flex-col items-center text-center relative z-10">
+                    <div class="w-full flex flex-wrap items-center justify-between gap-2 text-xs text-[#5c3a1e] mb-1.5 font-bold">
+                        <span id="chapter-badge" class="px-2.5 py-0.5 rounded-full bg-[#1b2c4a] text-[#fcf6ba] tracking-wide">
+                            제 1장 · 긍정의 진짜 의미
+                        </span>
+                        <div class="flex items-center gap-3">
+                            <span id="progress-summary" class="text-[#1b2c4a] font-extrabold">
+                                30일 완주율: 0 / 30일 (0%)
+                            </span>
+                            <span id="save-status" class="flex items-center gap-1 text-[#5c3a1e]">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#8c2d19]"></i> 기록 대기 중
+                            </span>
+                        </div>
+                    </div>
+
+                    <h2 id="day-main-title" class="text-2xl sm:text-3xl font-extrabold text-[#1b2c4a] tracking-tight my-1" style="font-family: 'Nanum Myeongjo', serif;">
+                        DAY 01 · 당신이 알던 긍정은 긍정이 아니다
+                    </h2>
+                    <p id="day-subtitle" class="text-xs sm:text-sm text-[#5c3a1e] font-bold">
+                        삶이 바뀌지 않는 이유는 노력이 부족해서가 아니라 선택의 기준이 없기 때문이다.
+                    </p>
+                </div>
+
+                <!-- 2단 책 펼침 레이아웃 (좌측: 긍정학개론 원리 + 맞춤 훈련법 / 우측: 실전 상황 변환 + 실천 점수 체크) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative z-10">
+                    
+                    <!-- [왼쪽 페이지] 오늘의 긍정학개론 핵심 원리 & 3단계 훈련법 -->
+                    <div class="flex flex-col justify-between space-y-4 md:pr-3">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between pb-2 border-b border-[#8b6635]/35">
+                                <div class="flex items-center gap-2">
+                                    <span class="p-1.5 rounded-full bg-[#1b2c4a]/12 text-[#1b2c4a]">
+                                        <i data-lucide="key-round" class="w-5 h-5"></i>
+                                    </span>
+                                    <div>
+                                        <h3 class="text-lg font-extrabold text-[#1b2c4a]" style="font-family: 'Nanum Myeongjo', serif;">
+                                            오늘의 긍정학개론 원리
+                                        </h3>
+                                        <p class="text-[11px] text-[#5c3a1e] font-semibold">이해하려 애쓰기보다 오늘 하루 그대로 적용해 보세요</p>
+                                    </div>
+                                </div>
+                                <input type="date" id="practice-date" onchange="saveCurrentDayData()" 
+                                       class="bg-[#efe1c6] text-[#24170e] border border-[#b89664] rounded-lg px-2 py-0.5 text-xs font-bold focus:outline-none cursor-pointer" title="실천 날짜 기록">
+                            </div>
+
+                            <!-- 핵심 개념 본문 카드 -->
+                            <div class="p-4 rounded-xl bg-[#efe1c6]/90 border border-[#b89664]/65 shadow-sm space-y-2.5">
+                                <p id="lesson-concept" class="text-sm sm:text-[15px] text-[#24170e] leading-relaxed font-medium">
+                                    핵심 개념 설명이 이곳에 표시됩니다.
+                                </p>
+                                <div class="pt-2 border-t border-[#8b6635]/25">
+                                    <p class="text-xs font-extrabold text-[#8c2d19] mb-1">✦ 오늘의 핵심 문장 (책 속 한 줄)</p>
+                                    <p id="lesson-mantra" class="text-sm font-extrabold text-[#1b2c4a] leading-snug">
+                                        "긍정은 나를 더 행복하게 하고 더 좋은 결과로 이끄는 선택이다."
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 오늘 주제 맞춤 실전 훈련 루틴 (단계별 가이드) -->
+                            <div class="p-4 rounded-xl bg-[#f9f3e6] border-2 border-[#8c2d19]/35 shadow-sm space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-extrabold text-[#8c2d19] flex items-center gap-1.5">
+                                        <i data-lucide="swords" class="w-4 h-4"></i> 오늘 주제 맞춤 · 3단계 실전 훈련법
+                                    </span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#8c2d19]/10 text-[#8c2d19] font-bold">DAILY TRAINING</span>
+                                </div>
+                                <ul id="training-steps" class="space-y-1.5 text-xs sm:text-[13px] text-[#24170e] font-medium leading-snug">
+                                    <!-- JS로 해당 일차 주제에 맞는 구체적 훈련 3단계 렌더링 -->
+                                </ul>
+                            </div>
+
+                            <!-- 오늘의 실전 미션 & 긍정 주문 버튼 -->
+                            <div class="p-3.5 rounded-xl bg-[#f9f2e3] border border-[#1b2c4a]/25 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-extrabold text-[#1b2c4a] flex items-center gap-1">
+                                        <i data-lucide="wand-2" class="w-3.5 h-3.5 text-[#8c2d19]"></i> 오늘의 긍정 언어 주문 (클릭 시 노트에 자동 각인)
+                                    </span>
+                                </div>
+                                <div id="spell-chips" class="flex flex-wrap gap-1.5">
+                                    <!-- JS로 오늘의 추천 긍정 주문 칩 생성 -->
+                                </div>
+                            </div>
+
+                            <!-- 1) 오늘의 나만의 긍정 확언 & 다짐 -->
+                            <div>
+                                <label class="block text-sm font-extrabold text-[#24170e] mb-1">
+                                    1. 오늘 내가 선택한 긍정의 기준 & 선언
+                                </label>
+                                <input type="text" data-field="morningDeclaration" class="magic-input" placeholder="오늘 어떤 상황에서도 내가 선택할 긍정 한 문장을 적어보세요...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- [오른쪽 페이지] 실전 훈련 워크시트 (4대 절대 규칙 적용 & 실천 점수) -->
+                    <div class="flex flex-col justify-between space-y-4 md:pl-3 border-t md:border-t-0 border-[#8b6635]/35 pt-6 md:pt-0">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2.5 pb-2 border-b border-[#8b6635]/35">
+                                <span class="p-1.5 rounded-full bg-[#8c2d19]/12 text-[#8c2d19]">
+                                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-lg font-extrabold text-[#8c2d19]" style="font-family: 'Nanum Myeongjo', serif;">
+                                        실전 긍정 훈련 워크시트
+                                    </h3>
+                                    <p id="mission-guide" class="text-xs text-[#5c3a1e] font-bold">
+                                        오늘의 미션: 자극을 포착하고 긍정 언어로 전환하기
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 2) 자극 포착 & '그럴 수 있지' 수용 훈련 -->
+                            <div>
+                                <label id="ws-label-1" class="block text-sm font-extrabold text-[#24170e] mb-1">
+                                    2. 오늘 마주한 자극·불편한 상황 & <span class="text-[#8c2d19]">'그럴 수 있지'</span> 적용
+                                </label>
+                                <div class="space-y-1.5">
+                                    <input type="text" data-field="triggerEvent" class="magic-input" placeholder="오늘 나를 흔든 자극, 걱정, 혹은 불편했던 사건은 무엇인가요?">
+                                    <input type="text" data-field="acceptanceShift" class="magic-input" placeholder="→ '그럴 수 있지! 모든 원인은 내 선택에 있고 덕분에 하나 배웠네'">
+                                </div>
+                            </div>
+
+                            <!-- 3) 긍정 언어 9가지 법칙 실전 대사 -->
+                            <div>
+                                <label id="ws-label-2" class="block text-sm font-extrabold text-[#24170e] mb-1">
+                                    3. 나의 긍정 언어 실행 <span class="text-xs font-semibold text-[#5c3a1e]">(경험·배움·지혜·기회·덕분·그리고)</span>
+                                </label>
+                                <div class="space-y-1.5">
+                                    <input type="text" data-field="positiveSpeech1" class="magic-input" placeholder="오늘 입 밖으로 소리 내어 말한 긍정 언어는?">
+                                    <input type="text" data-field="positiveSpeech2" class="magic-input" placeholder="이 상황을 어떤 새로운 기회로 만들 수 있을까요?">
+                                </div>
+                            </div>
+
+                            <!-- 4) 감정 + 결과 검증 (긍정의 2가지 기준 체크) -->
+                            <div>
+                                <label id="ws-label-3" class="block text-sm font-extrabold text-[#24170e] mb-1">
+                                    4. 오늘의 긍정 성적표 (내 감정과 결과는 어떻게 달라졌나요?)
+                                </label>
+                                <div class="p-3 rounded-xl bg-[#efe1c6]/85 border border-[#b89664]/60 space-y-1.5">
+                                    <input type="text" data-field="resultReview" class="magic-input" placeholder="긍정을 선택하니 내 기분과 상황이 어떻게 유리하게 바뀌었나요?">
+                                    <input type="text" data-field="gratitudeClosing" class="magic-input" placeholder="오늘 하루 가장 감사한 일 한 줄로 마무리...">
+                                </div>
+                            </div>
+
+                            <!-- 5) 오늘의 실천 정도 점수 체크 (1~10점) -->
+                            <div class="p-3.5 rounded-xl bg-[#f9f2e3] border border-[#1b2c4a]/30 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-xs sm:text-sm font-extrabold text-[#1b2c4a] flex items-center gap-1.5">
+                                        <i data-lucide="award" class="w-4 h-4 text-[#8c2d19]"></i>
+                                        5. 오늘의 긍정 실천 정도 점수 체크
+                                    </label>
+                                    <span id="practice-score-badge" class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-[#1b2c4a]/10 text-[#1b2c4a]">
+                                        점수 선택 전
+                                    </span>
+                                </div>
+                                <div id="score-buttons" class="grid grid-cols-10 gap-1">
+                                    <!-- JS로 1~10점 버튼 생성 -->
+                                </div>
+                                <p id="practice-score-comment" class="text-[11px] text-[#5c3a1e] font-semibold">
+                                    오늘 하루 긍정학개론 원리를 얼마나 선택하고 실천했는지 1~10점으로 체크해 보세요!
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 우측 하단: 오늘의 수련 완료 왁스 봉인 도장 -->
+                        <div class="pt-3 border-t border-[#8b6635]/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <div class="text-xs text-[#5c3a1e] font-semibold">
+                                <span>4대 절대 규칙: <strong class="text-[#1b2c4a]">그럴 수 있지 · 내 책임 · 부정어 금지</strong></span>
+                                <p class="text-[11px] text-[#755432] mt-0.5">"생각은 단 1초 만에 내가 바꿀 수 있는 유일한 무기다"</p>
+                            </div>
+
+                            <button id="wax-seal-btn" onclick="toggleWaxSeal()" type="button"
+                                    class="wax-seal-btn flex items-center gap-2 px-3.5 py-2 rounded-full border-2 border-[#1b2c4a]/50 bg-[#efe1c6] hover:bg-[#e5d1ab] text-[#1b2c4a] shadow-sm cursor-pointer shrink-0">
+                                <span id="wax-seal-icon" class="w-8 h-8 rounded-full flex items-center justify-center bg-[#1b2c4a]/15 text-[#1b2c4a] font-extrabold text-sm">
+                                    ✦
+                                </span>
+                                <div class="text-left">
+                                    <div id="wax-seal-title" class="text-xs font-extrabold">Day 수련 완료 도장</div>
+                                    <div id="wax-seal-sub" class="text-[10px] text-[#5c3a1e]">클릭하여 오늘 챌린지 봉인</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 하단 책장 넘김 버튼 -->
+                <div class="mt-7 pt-3 border-t border-[#8b6635]/30 flex items-center justify-between text-xs sm:text-sm text-[#24170e] relative z-20">
+                    <button id="prev-day-btn" onclick="changeDay(-1)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[#8b6635]/20 font-extrabold transition cursor-pointer">
+                        <i data-lucide="arrow-left" class="w-4 h-4 text-[#1b2c4a]"></i> 이전 Day
+                    </button>
+                    <span class="text-xs text-[#5c3a1e] font-semibold hidden sm:inline">양피지 하단 모서리를 누르거나 화면을 밀어 다음 Day로 넘겨보세요</span>
+                    <button id="next-day-btn" onclick="changeDay(1)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[#8b6635]/20 font-extrabold transition cursor-pointer">
+                        다음 Day <i data-lucide="arrow-right" class="w-4 h-4 text-[#1b2c4a]"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         30일 챌린지 전체 여정 맵(목차) 모달
+    ========================================================= -->
+    <div id="curriculum-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#13213c] border border-[#d4af37]/45 rounded-2xl w-full max-w-3xl max-h-[84vh] flex flex-col shadow-2xl animate-modal text-[#fcf6ba]">
+            <div class="p-4 sm:p-5 border-b border-[#d4af37]/25 flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-bold gold-foil">『긍정학개론』 30일 마법 챌린지 여정</h3>
+                    <p class="text-xs text-[#e5dec9]/75 mt-0.5">원하는 일차를 선택하면 해당 양피지 페이지로 책장이 넘어갑니다</p>
+                </div>
+                <button onclick="toggleCurriculumModal()" class="p-1.5 rounded-lg hover:bg-white/10 text-[#e5dec9] cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div id="curriculum-grid" class="p-4 sm:p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1">
+                <!-- JS로 1일차~30일차 카드 렌더링 -->
+            </div>
+
+            <div class="p-3.5 border-t border-[#d4af37]/20 flex items-center justify-between text-xs text-[#e5dec9]/75 px-5">
+                <span>1~7일: 자극과 수용 · 8~15일: 긍정 언어 9법칙 · 16~22일: 돈과 실행 · 23~30일: 관계·사랑 마스터</span>
+                <span id="modal-streak-text" class="font-bold text-[#fcf6ba]">0 / 30일 완료</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         기록 초기화 확인 모달
+    ========================================================= -->
+    <div id="reset-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#13213c] border border-[#d4af37]/45 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl animate-modal">
+            <div class="w-12 h-12 rounded-full bg-red-950/70 border border-red-500/40 flex items-center justify-center mx-auto mb-3 text-red-300">
+                <i data-lucide="eraser" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-lg font-bold text-[#fcf6ba] mb-2">현재 Day 기록을 지울까요?</h4>
+            <p class="text-xs sm:text-sm text-[#e5dec9]/80 mb-5 leading-relaxed">
+                현재 펼쳐진 Day 페이지의 작성 내용과 도장이 초기화됩니다.<br>다른 일차의 기록은 그대로 보존됩니다.
+            </p>
+            <div class="flex items-center justify-center gap-3">
+                <button onclick="closeResetConfirm()" class="flex-1 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-sm text-[#e5dec9] transition cursor-pointer">
+                    취소
+                </button>
+                <button onclick="confirmResetCurrentDay()" class="flex-1 py-2 rounded-xl bg-red-700 hover:bg-red-600 text-sm text-white font-semibold transition cursor-pointer">
+                    깨끗이 지우기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // 1. 『긍정학개론』(긍정강민 저) 30일 챌린지 커리큘럼 데이터
+        // =========================================================
+        const CURRICULUM_30 = [
+            // [1주차: 제1장~제3장] 긍정의 본질, 자극 착각 이론, 그럴 수 있지 절대 수용
+            {
+                day: 1,
+                chapter: "프롤로그 & 제 1장 · 긍정의 진짜 의미",
+                title: "DAY 01 · 당신이 알던 긍정은 긍정이 아니다",
+                subtitle: "삶이 바뀌지 않는 이유는 노력이 부족해서가 아니라 선택의 기준이 없기 때문이다.",
+                concept: "긍정은 단순한 위로가 아닙니다. 지금 내 앞에 놓인 상황을 해석하는 '안경'이자, 내 감정을 더 행복하게 만들고 동시에 더 좋은 결과로 이끄는 현실적인 선택 기준입니다.",
+                mantra: "긍정은 타고나는 것이 아니라, 나에게 유리하기 때문에 계속 선택하고 익숙해지는 것이다.",
+                mission: "오늘 하루 마주한 문제 하나를 '기분 달래기'가 아닌 '감정+결과 모두 이득이 되는 방향'으로 해석해 보세요.",
+                training: [
+                    "① [감정+결과 필터링] 고민이 생길 때마다 '이 생각이 내 기분과 결과를 좋게 만드는가?' 2가지를 즉시 자문하기",
+                    "② [유리한 선택] 기분만 달래는 회피나 짜증 대신, 지금 나를 한 발 더 나아가게 하는 가장 이득인 생각 고르기",
+                    "③ [기록 훈련] 오늘 선택한 긍정 기준이 실제 행동과 결과로 이어진 장면 1가지 적어보기"
+                ],
+                spells: ["그럴 수 있지", "나에게 유리한 선택을 하자", "하나 배운 거지"],
+                worksheet: {
+                    label1: "2. [감정+결과 필터링] 오늘 나를 답답하게 만든 문제 & 유리한 해석",
+                    q1: "오늘 기분을 나쁘게 만들었던 사건이나 고민은 무엇인가요?",
+                    q2: "→ 내 감정과 결과를 동시에 좋게 만드는 긍정적 해석은?",
+                    label2: "3. [선택의 기준 전환] 기분 달래기 대신 실행한 이득 행동",
+                    q3: "회피하거나 짜증 내는 대신 오늘 새롭게 선택한 행동은 무엇인가요?",
+                    q4: "그 선택이 내 현실에 가져다준 작지만 확실한 변화는?",
+                    label3: "4. [DAY 01 긍정 안경 점검] 오늘의 결론 & 감사 한 줄",
+                    q5: "긍정이라는 안경을 쓰고 보니 달라 보인 오늘의 장면은?",
+                    q6: "오늘 하루 가장 감사한 일 한 줄로 마무리..."
+                }
+            },
+            {
+                day: 2,
+                chapter: "제 1장 · 긍정의 진짜 의미",
+                title: "DAY 02 · 모든 사소한 순간에 긍정 적용하기",
+                subtitle: "일상의 1kg 아령을 들어 올린 사람만이 인생 위기의 100kg 바벨을 든다.",
+                concept: "결정적인 순간에만 갑자기 긍정적으로 생각하려고 하면 반드시 무너집니다. 별일 아닌 말 한마디, 사소한 계획 틀어짐 앞에서부터 100% 긍정적 해석을 쌓아두어야 큰 순간에 힘을 발휘합니다.",
+                mantra: "긍정은 내 삶의 모든 사소한 순간에 쌓여 있어야 결정적인 순간에도 그 힘을 발휘한다.",
+                mission: "오늘 겪은 아주 사소한 불편함(날씨, 교통, 지연 등)에 즉시 긍정 해석을 붙여보세요.",
+                training: [
+                    "① [1kg 아령 훈련] 출퇴근길, 대기 시간, 날씨, 작은 실수 등 사소한 불편함을 긍정 근육 훈련 기회로 포착하기",
+                    "② [억지 미소 루틴] 잠자리에 눕는 순간까지 입꼬리를 살짝 올리고 '오늘도 다 좋았다'고 뇌에 각인시키기",
+                    "③ [반사 신경 체크] 미간을 찌푸리려는 찰나 1초 만에 '오히려 좋아, 지혜를 쌓는 거지'로 전환하기"
+                ],
+                spells: ["오히려 좋아", "지혜를 쌓는 거지", "감사하다"],
+                worksheet: {
+                    label1: "2. [1kg 아령 훈련] 오늘 마주한 사소한 불편함 & 1초 반사 전환",
+                    q1: "오늘 겪은 아주 사소한 불편함(지연, 날씨, 실수 등)은?",
+                    q2: "→ 미간 찌푸림 대신 1초 만에 덧칠한 '오히려 좋아' 해석은?",
+                    label2: "3. [긍정 반사 신경] 일상 속 작은 순간에 쌓은 긍정 근육",
+                    q3: "별일 아닌 말 한마디나 대기 시간을 어떻게 즐거운 기회로 바꿨나요?",
+                    q4: "평소 습관대로 반응했을 때와 비교해 내 기분은 어떻게 달라졌나요?",
+                    label3: "4. [잠자리 미소 루틴] 오늘 하루의 긍정 근육 성적표",
+                    q5: "오늘 들어 올린 1kg 긍정 아령 중 가장 뿌듯한 순간은?",
+                    q6: "미소를 머금고 적는 오늘의 감사 한 줄..."
+                }
+            },
+            {
+                day: 3,
+                chapter: "제 2장 · 자극 착각 이론",
+                title: "DAY 03 · 매운 음식의 함정, 자극 착각 알아차리기",
+                subtitle: "뇌가 '강하게 느껴지는 것'을 '꼭 생각해야 하는 것'으로 착각하고 있을 뿐이다.",
+                concept: "걱정, 후회, 분노, 질투는 매운 음식처럼 뇌를 강하게 자극하기 때문에 우리가 중요한 생각이라고 착각(자극 오인 현상)하며 붙잡습니다. 감정은 떠오를 수 있지만, 계속 붙잡을지는 나의 선택입니다.",
+                mantra: "부정은 진실이라서 붙잡는 것이 아니라, 강하게 느껴져서 중요하다고 오해하며 붙잡는 것이다.",
+                mission: "머릿속에 맴도는 걱정이나 화나는 생각이 떠오를 때 '아, 뇌가 자극에 속고 있구나!' 하고 알아차려 보세요.",
+                training: [
+                    "① [자극 오인 포착] 심장을 조이는 걱정이나 분노가 올라올 때 '이건 진실이 아니라 매운맛 자극일 뿐이야'라고 이름 붙이기",
+                    "② [저항 대신 메뉴 변경] '생각하지 말아야지' 싸우지 말고, 식당에서 건강한 메뉴를 고르듯 편안한 생각으로 시선 옮기기",
+                    "③ [붙잡음 해제] 감정이 떠오른 건 자연스럽지만, 5분 이상 붙잡고 있는 건 내 선택임을 인정하고 내려놓기"
+                ],
+                spells: ["자극에 속지 말자", "다른 메뉴를 주문하자", "그럴 수 있지"],
+                worksheet: {
+                    label1: "2. [매운맛 자극 포착] 오늘 내 뇌를 강하게 흔든 생각의 정체",
+                    q1: "오늘 심장을 조이거나 머릿속을 맴돌았던 걱정·분노·후회는?",
+                    q2: "→ '진실이 아니라 강한 자극일 뿐이야!' 하고 이름 붙인 순간은?",
+                    label2: "3. [생각 메뉴 변경] 저항 대신 새로 주문한 건강한 생각 메뉴",
+                    q3: "생각과 싸우는 대신 일부러 시선을 옮긴 편안한 주제는 무엇인가요?",
+                    q4: "자극적인 생각을 내려놓으니 몸과 마음이 얼마나 가벼워졌나요?",
+                    label3: "4. [자극 착각 해방 일지] 오늘 내가 주인이 된 순간",
+                    q5: "감정에 끌려가지 않고 내가 생각을 선택한 결정적 장면은?",
+                    q6: "자극에서 벗어나 평온함을 되찾은 나에게 감사 한 줄..."
+                }
+            },
+            {
+                day: 4,
+                chapter: "제 3장 · 그럴 수 있지 절대 수용 이론",
+                title: "DAY 04 · 괴로움의 진짜 원인, 고정관념 부수기",
+                subtitle: "문제를 만드는 것은 사건 자체가 아니라 사건 위에 덧씌운 '나만의 당연함'이다.",
+                concept: "'사랑은 변하면 안 된다', '친구는 이래야 한다', '직장은 원래 이렇다'는 고정관념이 괴로움을 만듭니다. 내 경험과 지식이 언제나 정답이라는 자만을 내려놓으면 문제의 원인이 소멸합니다.",
+                mantra: "고정관념은 내가 신이라고 생각하는 자만이다. 원인을 제거하면 문제는 사라진다.",
+                mission: "오늘 나를 화나게 하거나 서운하게 만든 일 뒤에 숨은 내 안의 '고정관념(~해야만 해)'을 찾아보세요.",
+                training: [
+                    "① [고정관념 색출] 나를 괴롭히는 문장 속 '~해야 한다', '어떻게 그럴 수 있어?'라는 내 머릿속 잣대 찾아내기",
+                    "② [일론 머스크식 유연함] '내 경험과 판단이 언제든 틀릴 수 있다'고 겸손하게 인정해 보기",
+                    "③ [원인 소멸 훈련] 사건 자체와 내 고정관념을 분리하여 문제의 싹을 머릿속에서 지워버리기"
+                ],
+                spells: ["내가 틀릴 수도 있지", "그럴 수 있지", "원인을 제거하자"],
+                worksheet: {
+                    label1: "2. [고정관념 색출] 나를 괴롭힌 '~해야만 해'라는 머릿속 잣대",
+                    q1: "오늘 나를 화나거나 서운하게 만든 사건은 무엇이었나요?",
+                    q2: "→ 그 뒤에 숨어 있던 나의 고정관념('원래 ~해야지')은 무엇인가요?",
+                    label2: "3. [지적 유연함 훈련] 내 생각이 틀릴 수 있음을 인정하기",
+                    q3: "일론 머스크처럼 '내 방식이 비효율적일 수도 있겠네!' 인정한 부분은?",
+                    q4: "고정관념이라는 원인을 제거하고 나니 사건이 어떻게 보이나요?",
+                    label3: "4. [문제 소멸 기록] 프레임에서 벗어난 자유의 감각",
+                    q5: "기존의 잣대를 깨뜨렸을 때 새롭게 발견한 해결책이나 아이디어는?",
+                    q6: "자만의 벽을 허물고 한 뼘 더 유연해진 오늘의 감사 한 줄..."
+                }
+            },
+            {
+                day: 5,
+                chapter: "제 3장 · 그럴 수 있지 절대 수용 이론",
+                title: "DAY 05 · 나를 지키는 최고의 방패 '그럴 수 있지'",
+                subtitle: "상대를 용서하는 말이 아니라, 내 감정을 자유롭게 지키는 자기 보호 기술이다.",
+                concept: "'그럴 수 있지'라고 말하는 순간, 현실에 저항하던 뇌는 한 발짝 물러나 상황을 객관적으로 관찰하는 뇌로 바뀝니다. 이미 세상에 일어난 일은 나에게도 일어날 수 있음을 인정하세요.",
+                mantra: "<그럴 수 있지>는 모든 고민과 문제의 싹을 제거해 나를 지켜주는 기술이다.",
+                mission: "오늘 예상치 못한 변수나 타인의 이해 안 되는 행동을 만났을 때 1초 만에 '그럴 수 있지!'를 외쳐보세요.",
+                training: [
+                    "① [1초 선제 방어] 기분 나쁜 말이나 돌발 상황을 마주하자마자 첫마디로 '그럴 수 있지' 먼저 내뱉기",
+                    "② [관찰자 모드 전환] 옳고 그름을 따지는 대신 한 발짝 물러나 '세상엔 이런 경우도 있구나' 관찰하기",
+                    "③ [이득 계산] 상대를 위한 용서가 아니라 오직 내 마음의 평온과 자유를 지키기 위해 수용하기"
+                ],
+                spells: ["그럴 수 있지!", "세상엔 다양한 사람이 있지", "덕분에 하나 배웠네"],
+                worksheet: {
+                    label1: "2. [1초 방패 실전] '그럴 수 있지!'를 외쳐 방어한 실제 상황",
+                    q1: "오늘 이해하기 어렵거나 예상 밖으로 날아온 타인의 말/행동은?",
+                    q2: "→ 1초 만에 '그럴 수 있지!'를 적용해 내 감정을 지켜낸 과정은?",
+                    label2: "3. [관찰자 모드] 한 발짝 떨어져 바라보니 보인 객관적 사실",
+                    q3: "옳고 그름을 따지는 대신 관찰자가 되어 발견한 새로운 사실은?",
+                    q4: "감정 에너지를 아낀 덕분에 내가 더 집중할 수 있었던 내 일은?",
+                    label3: "4. [자기 보호 성적표] 평온함을 지킨 나의 승리 기록",
+                    q5: "'그럴 수 있지' 기술이 오늘 내 하루에 가져다준 가장 큰 이득은?",
+                    q6: "내 마음을 스스로 지켜낸 나에게 건네는 감사 한 줄..."
+                }
+            },
+            {
+                day: 6,
+                chapter: "제 3장 · 그럴 수 있지 절대 수용 이론",
+                title: "DAY 06 · 나다움의 역설과 예측 불가능성 활용하기",
+                subtitle: "원래의 나다움은 존재하지 않는다. 매일 처음 사는 인생을 배우며 성장할 뿐이다.",
+                concept: "'나는 원래 내성적이야', '나는 원래 이런 일과 안 맞아'라는 말은 배움을 멈추는 감옥입니다. 나쁜 일만 걱정하지 말고, 무일푼에서 부자가 되고 꿈을 이루는 예측 불가능한 좋은 가능성을 열어두세요.",
+                mantra: "나다움은 고정되어 있지 않다. 과거보다 더 나은 '나'를 만들어가는 내가 있을 뿐이다.",
+                mission: "평소 '이건 나답지 않아/난 원래 못 해'라며 피했던 일 하나를 오늘 새롭게 시도해 보세요.",
+                training: [
+                    "① ['원래 나는' 금지] 나를 규정짓던 과거의 습관이나 성격 꼬리표 하나를 떼어내고 '아직 안 익숙할 뿐'으로 바꾸기",
+                    "② [좋은 일 가능성 열기] 최악의 시나리오 대신 '누군가 해냈다면 나에게도 일어날 수 있는 좋은 일' 상상하기",
+                    "③ [첫 경험 실행] 평소에 안 해본 새로운 행동이나 낯선 시도를 오늘 1가지 직접 실천하기"
+                ],
+                spells: ["처음이라 서툰 게 당연해", "하다 보면 익숙해지지", "모든 가능성은 열려 있어"],
+                worksheet: {
+                    label1: "2. [나다움 감옥 탈출] 오늘 떼어낸 '원래 나는~' 꼬리표",
+                    q1: "그동안 나를 가두었던 '나는 원래 ~한 사람이야'라는 말은?",
+                    q2: "→ '원래 그런 게 아니라 아직 안 익숙할 뿐!'으로 바꾼 새 정의는?",
+                    label2: "3. [예측 불가능성 활용] 오늘 활짝 열어둔 좋은 일의 가능성",
+                    q3: "나쁜 일 걱정 대신 '나에게도 일어날 수 있다'고 허용한 멋진 일은?",
+                    q4: "오늘 처음 시도해 본 낯설지만 설레는 새로운 행동 1가지는?",
+                    label3: "4. [새로운 나 탄생] 어제보다 진화한 오늘의 기록",
+                    q5: "처음 사는 오늘을 살아내며 새롭게 배운 나의 가능성은?",
+                    q6: "한계 없이 성장할 수 있는 오늘에 대한 감사 한 줄..."
+                }
+            },
+            {
+                day: 7,
+                chapter: "제 3장 · 1주차 마스터 통합",
+                title: "DAY 07 · 모든 것은 내 책임이다 (통제권 100% 회수)",
+                subtitle: "책임은 죄책감이 아니라, 내 삶의 자유와 통제권을 온전히 거머쥐는 힘이다.",
+                concept: "남 탓이나 환경 탓을 하는 순간 내 인생을 바꿀 주도권은 타인에게 넘어갑니다. '모든 것은 나로부터 비롯되었다'고 인정하는 순간, 상황을 바꿀 힘도 100% 나에게 쥐어집니다.",
+                mantra: "모든 것을 내 책임이라고 생각하는 것은 내 삶의 통제권을 온전히 쥐고 자유를 만끽하는 일이다.",
+                mission: "1주차 복습! 최근 남 탓이나 상황 탓을 했던 일 하나를 가져와 '내 선택에서 비롯된 배움'으로 전환해 보세요.",
+                training: [
+                    "① [통제권 회수] 타인의 사과나 환경 변화를 기다리던 마음을 멈추고 '내가 선택한 결과'로 주도권 가져오기",
+                    "② [1초 말 바꾸기 실험] '아, 배고프다'를 '공복을 유지할 수 있어 감사하다'로 바꾸듯 생각의 전환 속도 체험하기",
+                    "③ [1주차 통합 점검] 지난 7일간 가장 효과적이었던 긍정 공식을 정리해 내 삶의 기본 원칙으로 삼기"
+                ],
+                spells: ["모든 것은 내 선택이다", "내 삶의 통제권은 나에게 있어", "덕분에 지혜를 얻었다"],
+                worksheet: {
+                    label1: "2. [통제권 100% 회수] 외부 탓을 멈추고 내 선택으로 가져오기",
+                    q1: "최근 남 탓이나 환경 탓을 하며 타인에게 주도권을 넘겼던 일은?",
+                    q2: "→ '모든 것은 내 선택에서 비롯되었구나' 인정하고 되찾은 자유는?",
+                    label2: "3. [1초 말 바꾸기 & 1주차 결산] 가장 강력했던 긍정 무기",
+                    q3: "오늘 부정적인 문장을 단 1초 만에 긍정 문장으로 뒤집어 본 예시는?",
+                    q4: "1주차(Day 1~7) 동안 내 삶에 가장 큰 변화를 준 핵심 원리는?",
+                    label3: "4. [1주차 완주 선언] 삶의 운전대를 쥔 주인의 기록",
+                    q5: "이제 내가 주도적으로 바꿀 다음 주 나의 핵심 행동 계획은?",
+                    q6: "내 인생의 통제권을 온전히 쥔 자유로움에 감사 한 줄..."
+                }
+            },
+
+            // [2주차: 제4장~제6장] 노력의 재정의, 신격화 벗어나기, 환경 통제, 긍정 언어 9법칙
+            {
+                day: 8,
+                chapter: "제 4장 · 노력의 진짜 의미",
+                title: "DAY 08 · 당신이 알던 노력은 노력이 아니다",
+                subtitle: "결과 없이 힘들었던 기억은 '버티기'일 뿐, 노력은 결과가 나왔을 때 붙는 이름이다.",
+                concept: "몇 번 해보고 안 된다고 포기하는 것은 단지 몇 번의 '시도'였을 뿐입니다. 결과가 나올 때까지 방식을 고치고 수정하며 계속 나아간 과정이 결과와 연결될 때 비로소 '노력'이 완성됩니다.",
+                mantra: "긍정적인 생각을 선택하고 결과가 나올 때까지 수정하며 노력하는 것만큼 쉬운 일은 없다.",
+                mission: "지금 잘 풀리지 않는 일에 대해 '안 된다' 대신 '무엇을 하나 수정해 볼까?'를 적어 실행해 보세요.",
+                training: [
+                    "① [버티기 vs 수정 구분] 같은 방식만 반복하며 힘들어하던 일을 멈추고, 결과를 바꿀 변수 1가지 찾아내기",
+                    "② [데이터 수집 마인드] 아직 결과가 없는 상태를 '실패'가 아닌 '수정할 지점을 알려주는 힌트'로 읽기",
+                    "③ [방향 수정 실행] 오늘 방식·시간 배분·표현 중 단 하나라도 다르게 고쳐서 재시도하기"
+                ],
+                spells: ["지금은 시도와 수정의 과정이야", "무엇을 고치면 될까?", "결국 결과로 증명된다"],
+                worksheet: {
+                    label1: "2. [시도·수정 진단] 제자리를 맴돌던 '버티기' 구간 찾기",
+                    q1: "결과가 나지 않아 '안 된다'고 느끼며 같은 방식만 반복하던 일은?",
+                    q2: "→ 그 결과가 나에게 알려주고 있는 명확한 '수정 힌트'는 무엇인가요?",
+                    label2: "3. [방향 수정 실행] 결과를 만들기 위해 오늘 바꾼 변수 1가지",
+                    q3: "오늘 방식, 순서, 표현 중 새롭게 고쳐서 재시도해 본 것은?",
+                    q4: "방향을 수정하며 움직이니 막막함이 어떻게 기대감으로 바뀌었나요?",
+                    label3: "4. [긍정 노력 성적표] 결과로 증명해 낼 나의 다짐",
+                    q5: "원하는 결과가 나올 때까지 추가로 테스트해 볼 다음 수정안은?",
+                    q6: "방향을 고칠 수 있는 지혜와 실행력에 대한 감사 한 줄..."
+                }
+            },
+            {
+                day: 9,
+                chapter: "제 5장 · 인생을 바꾸는 긍정의 법칙",
+                title: "DAY 09 · “내가 나를 신격화하고 있구나” 인정하기",
+                subtitle: "걱정, 후회, 타인의 시선은 신조차 할 수 없는 영역을 통제하려는 자만에서 온다.",
+                concept: "미래를 오차 없이 예측하려 들고(걱정), 과거를 되돌리려 하며(후회), 모든 사람의 마음을 내 입맛대로 조종하려는 것(눈치)은 스스로를 전지전능한 신으로 착각하는 '신격화의 함정'입니다.",
+                mantra: "미숙함이 당연한 인간의 자리로 돌아오라. 걱정과 후회는 배움과 데이터일 뿐이다.",
+                mission: "오늘 걱정·후회·눈치가 올라올 때마다 '아, 내가 또 나를 신격화하고 있구나!' 하고 웃으며 내려놓으세요.",
+                training: [
+                    "① [신격화 자각 주문] 걱정·후회·눈치가 올라올 때마다 '내가 뭐라고 신처럼 미래와 남의 마음을 조종하려 하지?' 웃어넘기기",
+                    "② [인간의 자리 복귀] 과거의 나도 그때 수준에서 최선을 다했음을 인정하고 자책 대신 데이터만 남기기",
+                    "③ [눈치 없는 환경 설계] 타인의 시선에 에너지를 빼앗기지 않도록 오늘 오직 내 할 일에만 집중하기"
+                ],
+                spells: ["내가 나를 신격화하고 있구나", "미숙한 게 당연한 인간이지", "배움과 데이터만 남기자"],
+                worksheet: {
+                    label1: "2. [신격화 함정 포착] 신의 영역을 넘보던 걱정·후회·눈치",
+                    q1: "오늘 미래를 예측하려 들거나(걱정) 남의 마음을 조종하려 했던(눈치) 일은?",
+                    q2: "→ '아, 내가 나를 신격화하고 있구나!' 인정하고 웃어넘긴 순간은?",
+                    label2: "3. [인간의 자리 복귀] 자책 대신 데이터와 시뮬레이션으로 전환",
+                    q3: "과거의 미숙함을 인정하고 오늘 얻은 순수한 '배움과 데이터'는?",
+                    q4: "타인의 시선에서 벗어나 오늘 오직 내 할 일에 집중한 시간은?",
+                    label3: "4. [겸손한 자유 일지] 인간이기에 누리는 가벼움",
+                    q5: "완벽해야 한다는 강박을 내려놓으니 마음이 얼마나 편안해졌나요?",
+                    q6: "미숙해도 매일 성장할 수 있는 인간임에 감사 한 줄..."
+                }
+            },
+            {
+                day: 10,
+                chapter: "제 5장 · 인생을 바꾸는 긍정의 법칙",
+                title: "DAY 10 · 환경이 기준을 만든다 (뉴스·댓글·부정 차단)",
+                subtitle: "고깃집에 가면 고기 냄새가 배듯, 부정적 소음과 사람을 끊어 100% 긍정 환경을 세팅하라.",
+                concept: "맑은 물컵에 먹물 한 방울만 떨어져도 탁해집니다. 자극적인 뉴스, 익명 댓글, 안 되는 이유만 늘어놓는 부정적인 사람과 거리를 두어야 내 정신적 기준과 에너지가 올라갑니다.",
+                mantra: "원하는 환경을 찾아 나서기 전에, 원하지 않았음에도 원한 것이 되어버린 부정적 환경을 먼저 지워라.",
+                mission: "오늘 하루 부정적인 뉴스·커뮤니티·댓글을 끊고, 대신 성장과 영감을 주는 콘텐츠로 채워보세요.",
+                training: [
+                    "① [디지털 독소 차단] 자극적인 뉴스, 가십, 익명 댓글 창을 오늘 하루 완전히 닫고 여론에 판단권 넘기지 않기",
+                    "② [부정 소음 거리두기] 대안 없이 불평하고 깎아내리는 대화에서 한 발 물러나 내 맑은 물컵 지키기",
+                    "③ [상위 기준 노출] 내가 닮고 싶은 성취를 이룬 사람들의 책·영상·환경에 최소 30분 이상 머무르기"
+                ],
+                spells: ["내 삶에 오직 긍정만 허락한다", "환경이 곧 나의 기준이다", "부정적 소음 차단 완료"],
+                worksheet: {
+                    label1: "2. [먹물 원천 차단] 오늘 끊어낸 부정적 소음 & 디지털 독소",
+                    q1: "오늘 의식적으로 닫아버린 뉴스, 댓글, 커뮤니티, 부정적 대화는?",
+                    q2: "→ 내 맑은 물컵을 지키기 위해 거리를 둔 부정적 에너지는 무엇인가요?",
+                    label2: "3. [향기로운 환경 세팅] 빈자리에 채운 상위 기준의 영감",
+                    q3: "부정적 소음을 지운 시간에 대신 읽고 보고 머무른 긍정 환경은?",
+                    q4: "접촉하는 환경을 바꾸자 내 생각의 기준이 어떻게 높아졌나요?",
+                    label3: "4. [100% 긍정 환경 점검] 내 머릿속에 스민 향기",
+                    q5: "앞으로도 내 인생에서 영구 차단할 부정적 환경 1순위는?",
+                    q6: "맑고 건강한 정신적 환경을 스스로 선택한 나에게 감사 한 줄..."
+                }
+            },
+            {
+                day: 11,
+                chapter: "제 5장 & 제 6장 · 긍정 언어 설계",
+                title: "DAY 11 · 모든 말을 긍정어로 설계하라 (감사·재미·칭찬)",
+                subtitle: "감사해서 감사하다고 하는 것이 아니라, 감사하다고 말해야 감사한 현실이 만들어진다.",
+                concept: "진심이 있어야 행동할 수 있다는 것은 착각입니다. 말과 행동이 진심을 만듭니다. '감사하다, 재미있다, 대단하다'를 기본값으로 세팅하면 0.1초 만에 내 삶의 주도권을 쥘 수 있습니다.",
+                mantra: "지금 당장 당신의 머릿속 생각과 입술을 통과하는 모든 말의 기본값을 '긍정'으로 세팅하라.",
+                mission: "오늘 만나는 사람과 나 자신에게 '감사하다, 재미있다, 대단하다'를 최소 5번 이상 소리 내어 말해 보세요.",
+                training: [
+                    "① [선행 언어 발사] 감정이 올라오길 기다리지 말고 '감사하다, 재미있다, 대단하다'를 먼저 입 밖으로 꺼내기",
+                    "② [주변 칭찬 3회] 가족, 동료, 매장 직원 등 오늘 마주치는 사람에게 진심 어린 감사와 칭찬 건네기",
+                    "③ [재미 프레임 씌우기] 지루하거나 힘든 일 앞에서도 '오, 이거 은근 재밌는데?'라고 말하며 분위기 바꾸기"
+                ],
+                spells: ["감사하다, 덕분이다", "완전 재미있는데?", "진짜 대단하다!"],
+                worksheet: {
+                    label1: "2. [선행 언어 발사] 감정을 기다리지 않고 먼저 뱉은 긍정어",
+                    q1: "오늘 의도적으로 먼저 소리 내어 말한 '감사하다·재미있다·대단하다'는?",
+                    q2: "→ 지루하거나 힘든 일에 '완전 재밌는데?'를 씌웠을 때의 변화는?",
+                    label2: "3. [주변 칭찬 3회 실천] 타인에게 건넨 감사와 인정의 말",
+                    q3: "오늘 가족, 동료, 또는 마주친 사람에게 건넨 진심 어린 칭찬은?",
+                    q4: "긍정어를 먼저 건네자 상대방의 표정과 분위기가 어떻게 변했나요?",
+                    label3: "4. [언어 기본값 세팅] 말 한마디로 쥔 삶의 주도권",
+                    q5: "0.1초 만에 입술에서 긍정어가 튀어나왔던 가장 뿌듯한 순간은?",
+                    q6: "좋은 말로 좋은 현실을 만들어낸 오늘의 감사 한 줄..."
+                }
+            },
+            {
+                day: 12,
+                chapter: "제 6장 · 긍정 언어 사용 백서 (주문 1~3)",
+                title: "DAY 12 · 실패를 지우는 3가지 주문: 경험·배움·지혜",
+                subtitle: "머릿속 사전에서 '실패'라는 단어를 영구 삭제하라.",
+                concept: "① 경험이지 ② 하나 배운 거지 ③ 지혜를 쌓는 거지! 기대와 다른 모든 상황은 실패가 아니라 더 나은 선택을 위한 데이터이자 나를 지혜롭게 만드는 자산입니다.",
+                mantra: "실패는 없다. 오직 '경험이지, 하나 배운 거지, 지혜를 쌓는 거지'만 있을 뿐이다.",
+                mission: "오늘 기대와 달랐던 순간이나 실수 앞에서 즉시 3가지 주문을 외쳐보세요.",
+                training: [
+                    "① ['실패/망했다' 영구 삭제] 실수나 거절을 당했을 때 '망했다' 대신 즉시 '경험이지!'로 첫 반응 바꾸기",
+                    "② [배움 추출하기] 기대와 달랐던 일에서 '내가 무엇을 알게 되었는지' 구체적 팩트 1가지 뽑아내기",
+                    "③ [지혜 자산 적립] 오늘 겪은 시행착오를 '앞으로 더 편하게 살기 위한 지혜를 쌓는 중'으로 선언하기"
+                ],
+                spells: ["경험이지!", "하나 배운 거지!", "지혜를 쌓는 거지!"],
+                worksheet: {
+                    label1: "2. [주문 1·2 실전] '실패/망했다'를 지우고 뽑아낸 배움",
+                    q1: "오늘 내 기대와 다르게 흘러가거나 아차 싶었던 순간은?",
+                    q2: "→ '경험이지! 하나 배운 거지!'를 외치며 건져 올린 구체적 팩트는?",
+                    label2: "3. [주문 3 지혜 적립] 나를 더 강하게 만든 자산 기록",
+                    q3: "이 경험 덕분에 앞으로 비슷한 상황에서 훨씬 편해질 지혜는?",
+                    q4: "실패라는 단어를 머릿속에서 지우니 도전이 얼마나 가벼워졌나요?",
+                    label3: "4. [지혜 자산 성적표] 오늘 적립한 성장 데이터",
+                    q5: "오늘 겪은 모든 시행착오를 한 문장의 지혜로 요약한다면?",
+                    q6: "실패 없이 오직 배움만 존재하는 삶에 대한 감사 한 줄..."
+                }
+            },
+            {
+                day: 13,
+                chapter: "제 6장 · 긍정 언어 사용 백서 (주문 4~6)",
+                title: "DAY 13 · 반박 대신 연결하라: 기회·덕분·그리고",
+                subtitle: "'그런데'를 버리고 '그리고'를 쓰는 순간, 갈등이 사라지고 기회가 열린다.",
+                concept: "④ 어떤 기회로 만들 수 있을까 ⑤ 감사하다, 덕분이다 ⑥ '그런데' 대신 '그리고' 사용하기! '그런데'는 방어막을 세우지만, '그리고'는 상대를 존중하며 더 좋은 대안으로 연결합니다.",
+                mantra: "필사적으로 '그런데'를 버리고 '그리고'를 써라. 모든 문제 속에는 돈을 벌고 성장할 기회가 숨어 있다.",
+                mission: "오늘 대화와 생각 속에서 '그런데'를 금지하고, 모든 사건을 '어떤 기회로 만들 수 있을까?'로 연결해 보세요.",
+                training: [
+                    "① ['그런데' 금지 챌린지] 대화나 속마음에서 반박하려는 순간 '그런데'를 멈추고 '맞아요, 그리고~'로 이어 말하기",
+                    "② [기회 변환 질문] 불편함이나 문제 앞에서 '이걸 어떤 기회로 만들 수 있을까?' 3초간 떠올리기",
+                    "③ ['덕분이다' 마침표] 오늘 겪은 모든 크고 작은 사건 끝에 '덕분이다, 감사하다'를 붙여 마무리하기"
+                ],
+                spells: ["어떤 기회로 만들 수 있을까?", "덕분이다, 감사하다", "맞아요, 그리고~"],
+                worksheet: {
+                    label1: "2. ['그런데' 금지 실전] 반박을 멈추고 '그리고'로 연결한 대화",
+                    q1: "오늘 대화 중 '그런데'라고 반박하고 싶었던 순간은 언제였나요?",
+                    q2: "→ '맞아요, 그리고~'로 상대 의견을 존중하며 연결한 실제 문장은?",
+                    label2: "3. [기회 변환 훈련] 불편함 속에서 발굴한 성장·수익 기회",
+                    q3: "오늘 마주한 불편함에 '어떤 기회로 만들 수 있을까?'를 대입한 결과는?",
+                    q4: "사건 끝에 '덕분이다'를 붙이니 부정적 감정이 어떻게 바뀌었나요?",
+                    label3: "4. [연결과 기회의 일지] 오늘 열린 새로운 문",
+                    q5: "'그런데'를 버림으로써 지켜낸 좋은 관계나 새로운 아이디어는?",
+                    q6: "모든 사건을 기회로 바꾸는 마법 주문에 대한 감사 한 줄..."
+                }
+            },
+            {
+                day: 14,
+                chapter: "제 6장 · 긍정 언어 사용 백서 (주문 7~9)",
+                title: "DAY 14 · 행운을 부르는 주문: 더 좋아·해보자·운이 좋아",
+                subtitle: "내가 운이 좋다고 말하면 내 삶은 운이 좋은 방향으로 흘러간다.",
+                concept: "⑦ 이것도 좋고, 이건 더 좋아 ('싫다' 지우기) ⑧ 해보자, 하면 되지, 하다 보면 되겠지 ⑨ 운이 좋아! 지금 숨 쉬며 이 글을 읽고 있다는 사실 자체가 이미 엄청난 행운의 증거입니다.",
+                mantra: "운이 좋고 나쁨은 외부에서 주어지는 것이 아니라, 내가 운이 좋다고 의미를 부여할 때 완성된다.",
+                mission: "오늘 '싫어, 어려워, 운 없어'를 금지하고, '이것도 좋고 이건 더 좋아 / 하다 보면 되겠지 / 나 완전 운이 좋아!'를 외치세요.",
+                training: [
+                    "① ['싫다' 대신 선호 표현] 싫은 대상이나 상황을 깎아내리는 대신 '이것도 괜찮고, 나는 이게 더 좋아'로 말하기",
+                    "② [확률 상승 주문] 망설여지는 일 앞에서 '해보자, 하면 되지, 하다 보면 되겠지' 소리 내어 실행 확률 높이기",
+                    "③ [행운 선언] 오늘 하루 사소한 일에도 '나 진짜 운이 좋아!'라고 의미를 부여하며 2주차 수련 완성하기"
+                ],
+                spells: ["이것도 좋고, 이건 더 좋아", "해보자, 하다 보면 되겠지!", "나 진짜 운이 좋아!"],
+                worksheet: {
+                    label1: "2. [주문 7·8 실전] '싫다·어렵다'를 지우고 확률을 높인 주문",
+                    q1: "'싫어' 대신 '이것도 좋고, 나는 이게 더 좋아'로 바꾼 표현은?",
+                    q2: "→ 망설이던 일에 '해보자, 하다 보면 되겠지!'를 외쳐 실행한 일은?",
+                    label2: "3. [주문 9 행운 선언] 내가 '운이 좋은 사람'인 증거 3가지",
+                    q3: "오늘 사소한 일상 속에서 발견한 '나 진짜 운이 좋다!' 순간은?",
+                    q4: "긍정 언어 9가지 법칙을 2주간 익히며 가장 크게 바뀐 말버릇은?",
+                    label3: "4. [2주차 마스터 성적표] 행운을 끌어당긴 하루의 기록",
+                    q5: "운이 좋다고 의미를 부여하자 실제로 기분 좋게 풀린 일은?",
+                    q6: "살아 숨 쉬며 행운을 선택할 수 있는 오늘의 감사 한 줄..."
+                }
+            },
+            {
+                day: 15,
+                chapter: "제 6장 · 상황별 긍정 언어 실전 훈련 ①",
+                title: "DAY 15 · [실전 훈련] 직장·학업·목표의 벽을 만났을 때",
+                subtitle: "업무 폭탄, 시험 결과, 슬럼프조차 나를 업그레이드하는 무료 훈련장이다.",
+                concept: "일이 쏟아질 때는 '내 일머리를 극한으로 키우는 훈련장', 목표가 막막할 때는 '내 욕망의 크기를 확인한 기회', 슬럼프가 올 때는 '방향을 점검할 타이밍'으로 해석하는 백서 실전 훈련입니다.",
+                mantra: "가상 훈련이 아닌 실제 내 현실의 업무·학업·목표 문제에 4가지 절대 규칙을 즉시 대입하라.",
+                mission: "현재 내 일·공부·목표에서 가장 부담되는 과제 하나를 골라 긍정학개론식 해석으로 재설계해 보세요.",
+                training: [
+                    "① [무료 훈련장 관점] 까다로운 요구나 쏟아지는 과제를 '나중에 내 사업을 할 때 쓸 일머리를 돈 받으며 키우는 중'으로 해석하기",
+                    "② [진단 데이터 활용] 부족한 성적이나 성과를 자책 대신 '어디를 보충할지 정확히 알려준 고마운 진단표'로 읽기",
+                    "③ [쪼개서 돌파] 너무 높아서 막막한 목표를 오늘 당장 해낼 수 있는 가장 작은 1단계 행동으로 쪼개 실행하기"
+                ],
+                spells: ["그럴 수 있지, 내 실력을 키울 기회야", "현재 위치를 정확히 진단했네", "하다 보면 쉬워진다"],
+                worksheet: {
+                    label1: "2. [일·학업·목표의 벽] 오늘 마주한 현실 과제 & 긍정 재해석",
+                    q1: "현재 내 업무, 공부, 목표에서 가장 부담되거나 막막한 상황은?",
+                    q2: "→ 백서 100선 스타일로 재해석한 나만의 압도적 긍정 대사는?",
+                    label2: "3. [작은 1단계 돌파] 완벽주의를 버리고 오늘 쪼개서 실행한 일",
+                    q3: "막막한 목표를 작게 쪼개어 오늘 당장 완료한 1단계 행동은?",
+                    q4: "이 훈련 과정을 통해 내가 키우고 있는 미래의 핵심 능력은?",
+                    label3: "4. [실전 돌파 성적표] 무료 훈련장에서 얻은 성장 근육",
+                    q5: "시련이나 과제를 훈련장으로 바라보니 태도가 어떻게 달라졌나요?",
+                    q6: "나를 더 실력 있는 사람으로 빚어주는 오늘의 과제에 감사 한 줄..."
+                }
+            },
+
+            // [3주차: 제6장 후반 & 제7장] 돌발 상황 대처, 부의 긍정, 수입 구조, 자기 확신
+            {
+                day: 16,
+                chapter: "제 6장 · 상황별 긍정 언어 실전 훈련 ②",
+                title: "DAY 16 · [실전 훈련] 불안·비교·일상 돌발 상황 돌파하기",
+                subtitle: "늦잠, 파토, 카드값, 타인의 시선조차 '공짜 시간과 성장 연료'로 바꾼다.",
+                concept: "약속이 취소되면 '공짜 자유 시간 획득', SNS 비교가 될 땐 '나도 할 수 있다는 증거 발견', 예기치 못한 지출이 생길 땐 '더 많이 벌어야겠다는 동기부여'로 전환하는 순발력을 기릅니다.",
+                mantra: "어떤 돌발 상황에서도 1초 만에 '그럴 수 있지, 완전 럭키비키하네!'로 전환하는 반사 신경을 만들어라.",
+                mission: "오늘 겪은 예상 밖의 돌발 상황이나 비교되는 마음을 긍정 연료로 전환해 보세요.",
+                training: [
+                    "① [돌발 상황 역전] 지각 위기, 약속 취소, 물건 파손, 품절 등 예기치 못한 변수에 '공짜 시간/새 경험 획득!' 외치기",
+                    "② [비교를 열정 연료로] 타인의 성취나 자산을 보며 작아질 때 '나도 잘 되고 싶다는 열정이 크구나!'로 동기부여 삼기",
+                    "③ [유머와 여유 장착] 예상치 못한 실수나 뻘쭘한 순간에도 웃어넘기며 '인생 에피소드 하나 늘었다'고 기록하기"
+                ],
+                spells: ["그럴 수 있지, 공짜 시간이 생겼네!", "나도 할 수 있다는 증거다!", "완전 럭키한 경험이야"],
+                worksheet: {
+                    label1: "2. [돌발 상황 순발력] 예상 밖의 변수를 내 이득으로 역전하기",
+                    q1: "오늘 계획과 다르게 튀어나온 돌발 상황(지연, 취소, 지출 등)은?",
+                    q2: "→ '그럴 수 있지! 오히려 공짜 시간/새 경험 생겼네!' 변환 대사는?",
+                    label2: "3. [불안·비교 연료화] 타인의 성취를 나의 동기부여로 바꾸기",
+                    q3: "SNS나 주변 소식을 보며 문득 비교되거나 조급했던 순간은?",
+                    q4: "그 부러움을 '나도 해낼 수 있다는 증거이자 열정'으로 바꾼 다짐은?",
+                    label3: "4. [유머와 순발력 일지] 웃어넘긴 오늘의 인생 에피소드",
+                    q5: "돌발 상황에서도 흔들리지 않고 여유를 지킨 나만의 비결은?",
+                    q6: "모든 변수를 재미있는 에피소드로 만드는 나에게 감사 한 줄..."
+                }
+            },
+            {
+                day: 17,
+                chapter: "제 7장 · 긍정은 돈을 만들고, 돈은 더 큰 긍정을 만든다",
+                title: "DAY 17 · 돈에 대한 고정관념 깨고 안정감 설계하기",
+                subtitle: "돈을 벌고 싶은 마음은 부끄러운 탐욕이 아니라, 내 삶의 난이도를 낮추는 훌륭한 욕구다.",
+                concept: "돈은 행복 그 자체는 아니지만 행복이 안전하게 뿌리내릴 '안정감'을 줍니다. 지금 가진 조건에 감사하는 긍정과, 더 큰 자유를 위해 돈을 버는 구조를 바꾸는 긍정을 함께 이해하세요.",
+                mantra: "우리가 긍정적으로 생각할 수 있는 만큼 돈을 벌 수 있고, 버는 돈만큼 더 크게 긍정할 수 있다.",
+                mission: "돈에 대해 가지고 있던 부정적 편견을 버리고, 내가 원하는 경제적 자유의 구체적 숫자를 적어보세요.",
+                training: [
+                    "① [부자 편견 지우기] '돈 밝히면 속물이다' 같은 고정관념을 버리고, 돈을 행복의 기반을 까는 도구로 인정하기",
+                    "② [현재 조건 감사] 지금 내게 주어진 수입, 머물 곳, 신용, 건강 등 당장 누리고 있는 기반에 진심으로 감사하기",
+                    "③ [목표 금액 구체화] 막연한 부자가 아니라 매달 벌고 싶은 순수익 목표와 하루 단위 달성 숫자를 명확히 계산하기"
+                ],
+                spells: ["돈은 내 삶의 자유를 넓혀준다", "감사함과 구조 변화를 함께 선택하자", "나는 가치를 만들고 부를 끌어당긴다"],
+                worksheet: {
+                    label1: "2. [돈의 고정관념 해제] 부에 대한 편견 버리기 & 현재 감사",
+                    q1: "그동안 돈이나 부자에 대해 무의식적으로 가졌던 부정적 편견은?",
+                    q2: "→ 지금 당장 내 일상을 지탱해 주는 경제적 조건 중 감사한 3가지는?",
+                    label2: "3. [경제적 자유 숫자 설계] 막연함을 구체적 숫자로 바꾸기",
+                    q3: "내가 진정으로 원하는 월 순수익 목표와 하루 단위 달성 목표액은?",
+                    q4: "그 목표를 이루기 위해 하루에 어떤 가치를 몇 명에게 전달할까요?",
+                    label3: "4. [부의 긍정 선언] 안정감과 자유를 향한 첫걸음",
+                    q5: "돈에 대한 불안을 설렘과 도전 의식으로 바꾼 나만의 기준은?",
+                    q6: "더 큰 가치를 만들고 풍요를 누릴 자격이 있는 나에게 감사 한 줄..."
+                }
+            },
+            {
+                day: 18,
+                chapter: "제 7장 · 긍정은 돈을 만든다",
+                title: "DAY 18 · 나만의 수입 구조를 만드는 최고의 긍정",
+                subtitle: "시간과 자유를 반납하는 닫힌 구조를 넘어, 내가 만든 가치로 수익을 창출하라.",
+                concept: "월급이라는 상한선에 갇힌 채 절약만 하거나 계좌 등락에 불안해하는 것은 진정한 긍정이 아닙니다. 큰 자본 없이도 내 지식·경험·콘텐츠로 사람들의 문제를 해결해 주는 내 사업의 근육을 키우세요.",
+                mantra: "가장 강력한 긍정은 내 시간과 노력이 100% 나의 수익과 자유로 직결되는 나만의 구조를 만드는 것이다.",
+                mission: "자본 없이 내 경험과 재능으로 타인의 불편함을 해결해 줄 수 있는 아이디어를 3가지 브레인스토밍해 보세요.",
+                training: [
+                    "① [무자본 가치 찾기] 큰돈을 들이지 않고 내 경험·지식·콘텐츠로 사람들의 고민을 해결해 줄 수 있는 영역 탐색하기",
+                    "② [소비자에서 생산자로] SNS나 시장을 관찰하며 '사람들이 무엇에 기꺼이 지갑을 여는지' 시장의 니즈 분석하기",
+                    "③ [작은 실행 착수] 완벽한 준비를 기다리지 않고 오늘 당장 글쓰기, 기획, 제안 등 첫 실행 1가지 시작하기"
+                ],
+                spells: ["돈은 사람들의 문제를 해결할 때 모인다", "내 이름으로 가치를 만들자", "작은 실행부터 바로 시작하자"],
+                worksheet: {
+                    label1: "2. [무자본 가치 발굴] 타인의 불편함을 해결할 나의 경험·재능",
+                    q1: "남들보다 조금이라도 더 겪어봤거나 해결해 본 나만의 경험/지식은?",
+                    q2: "→ 그 경험으로 도와줄 수 있는 사람들의 구체적인 고민은 무엇인가요?",
+                    label2: "3. [소비자 → 생산자 전환] 오늘 착수한 첫 가치 창출 실행",
+                    q3: "자본 없이 오늘 당장 실행해 본 콘텐츠·기획·제안 행동 1가지는?",
+                    q4: "수동적으로 버티는 피로감과 내 일을 개척하는 에너지는 어떻게 다른가요?",
+                    label3: "4. [나만의 구조 설계도] 시간과 자유를 되찾는 기록",
+                    q5: "내 이름 자체가 브랜드가 되기 위해 매일 쌓아갈 핵심 루틴은?",
+                    q6: "내 삶의 통제권과 수익 구조를 스스로 만들어가는 오늘에 감사 한 줄..."
+                }
+            },
+            {
+                day: 19,
+                chapter: "제 7장 · 긍정은 돈을 만든다",
+                title: "DAY 19 · 좋아하는 일을 찾는 가장 빠른 비결",
+                subtitle: "좋아하는 일을 찾아 헤매지 말고, 지금 하는 모든 일을 능숙하게 만들어 좋아해버려라.",
+                concept: "사람은 서툰 일은 싫어하고 능숙해진 일은 좋아하게 됩니다. '하면 되지'의 긍정 언어로 지금 맡은 일을 누구보다 능숙하게 해내면, 그 과정에서 진짜 내가 더 사랑하는 일을 발견하게 됩니다.",
+                mantra: "나는 모든 것을 할 수 있는 사람이라고 규정하고, 지금 내가 하는 모든 일을 좋아해버려라.",
+                mission: "오늘 해야 할 일 중 귀찮거나 낯선 일 하나를 '게임 퀘스트 깨듯 능숙하게 정복할 일'로 즐겨보세요.",
+                training: [
+                    "① [능숙함 먼저 만들기] 좋아하는 일을 찾아 방황하는 대신, 지금 내 앞에 놓인 일을 가장 능숙한 수준까지 끌어올리기",
+                    "② [게임 퀘스트화] 업무나 공부를 '고통스러운 노동'이 아니라 내 캐릭터 레벨과 능력치를 올리는 사냥으로 몰입하기",
+                    "③ [선호 발견] 능숙해진 일들 중에서 유독 눈이 가고 더 파고들고 싶은 핵심 영역 포착하기"
+                ],
+                spells: ["내가 하는 모든 일을 좋아해버리자", "능숙해지면 쉬워지고 재밌어진다", "나는 뭐든지 할 수 있는 사람이다"],
+                worksheet: {
+                    label1: "2. [능숙함 정복 훈련] 오늘 '좋아하는 일'로 만들어버릴 과제",
+                    q1: "오늘 해야 할 일 중 조금 귀찮거나 낯설게 느껴졌던 과제는?",
+                    q2: "→ '하다 보면 쉬워지고 내 무기가 된다!'며 능숙하게 해낸 방법은?",
+                    label2: "3. [게임 퀘스트 몰입] 레벨업하듯 즐겁게 몰입한 순간",
+                    q3: "고통스러운 노동 대신 게임 퀘스트 깨듯 몰입해 본 경험은?",
+                    q4: "능숙해지면서 유독 더 재미있고 파고들고 싶어졌던 포인트는?",
+                    label3: "4. [올라운더 자부심] 무엇이든 해내는 나의 기록",
+                    q5: "내가 좋아하는 일을 스스로 창조해 낼 수 있다는 확신이 들었나요?",
+                    q6: "지금 내 손에 주어진 일을 사랑할 수 있는 힘에 감사 한 줄..."
+                }
+            },
+            {
+                day: 20,
+                chapter: "제 7장 · 긍정은 돈을 만든다",
+                title: "DAY 20 · 모든 일을 나 혼자 할 수 있다고 생각하라",
+                subtitle: "시도조차 하지 않고 묻는 의존성을 버리고, 스스로 부딪히며 정보와 근육을 축적하라.",
+                concept: "처음부터 남에게 물어보면 단 하나의 정답만 얻지만, 혼자 끝까지 고민하고 찾아보면 그 과정에서 수십 가지의 지혜가 내 것이 됩니다. '나는 혼자서도 다 해낼 수 있다'는 태도가 진짜 실력을 만듭니다.",
+                mantra: "누구의 도움 없이도 나는 혼자서 모든 것을 해낼 수 있다는 태도로 문제 해결의 연속을 돌파하라.",
+                mission: "오늘 막히는 문제가 생겼을 때 누군가에게 묻기 전에 30분 이상 혼자 끝까지 검색하고 시도해 보세요.",
+                training: [
+                    "① [의존성 끊기] 막히는 순간 바로 질문하거나 도움을 구하기 전에 '나 혼자서 다 해낼 수 있다' 먼저 선언하기",
+                    "② [30분 끝장 탐색] 스스로 자료를 찾고 부딪히면서 주변 지혜까지 한꺼번에 흡수하는 근육 기르기",
+                    "③ [자립 효능감 기록] 혼자 힘으로 해결해 낸 크고 작은 성취를 기록하며 내 문제 해결력 확인하기"
+                ],
+                spells: ["나는 혼자서도 다 해낼 수 있다", "스스로 찾은 지식이 진짜 내 무기다", "하다 보면 반드시 길이 보인다"],
+                worksheet: {
+                    label1: "2. [의존성 끊기 실전] 묻기 전에 혼자 끝까지 파고든 문제",
+                    q1: "오늘 남에게 바로 물어보거나 맡기고 싶었던 막막한 문제는?",
+                    q2: "→ '나 혼자서 다 해낼 수 있다!' 선언하고 30분 이상 파고든 과정은?",
+                    label2: "3. [덤으로 얻은 지혜] 탐색 과정에서 흡수한 주변 지식",
+                    q3: "스스로 부딪히며 해결하는 동안 덤으로 알게 된 새로운 정보들은?",
+                    q4: "내 힘으로 문제를 돌파하고 나니 자존감과 실력이 어떻게 변했나요?",
+                    label3: "4. [자립 문제 해결사 일지] 누구의 도움 없이도 당당한 나",
+                    q5: "앞으로 어떤 낯선 과제가 와도 혼자 돌파할 수 있겠다는 근거는?",
+                    q6: "스스로 길을 찾고 해결해 내는 강인한 나에게 감사 한 줄..."
+                }
+            },
+            {
+                day: 21,
+                chapter: "제 7장 · 긍정은 돈을 만든다",
+                title: "DAY 21 · 오로지 잘 된 사람의 조언을 따라라",
+                subtitle: "보통의 확률을 묻는 사람은 보통에 머문다. 이미 해낸 사람의 공식만 흡수하라.",
+                concept: "해보지도 않고 '현실적으로 어렵다'고 말하는 사람들의 조언은 당신을 보통의 900명에 묶어둡니다. 이미 그 분야에서 결과를 낸 사람들의 습관과 행동만 관찰하고 내 것으로 만드세요.",
+                mantra: "잘 되는 사람들에게 잘 될 확률은 100%다. 잘 될 때까지 수정하며 해내기 때문이다.",
+                mission: "내가 이루고 싶은 분야에서 이미 성공한 멘토/롤모델 1명을 정해 그의 생각 방식과 행동을 분석해 보세요.",
+                training: [
+                    "① [보통의 확률 거부] '될 가능성이 몇 %일까?' 묻는 대신 '될 때까지 해내면 확률은 100%'라는 기준 세우기",
+                    "② [성공자 벤치마킹] 내가 원하는 결과를 이미 낸 사람의 말투, 습관, 문제 해결 방식을 1가지 이상 분석하기",
+                    "③ [아마추어 조언 필터링] 해보지 않고 걱정만 건네는 주변의 현실적 만류를 가볍게 흘려보내기"
+                ],
+                spells: ["잘 된 사람의 길만 따른다", "잘 될 때까지 해내면 확률은 100%다", "보통의 기준을 거부한다"],
+                worksheet: {
+                    label1: "2. [보통의 확률 거부] 아마추어의 걱정 걸러내기",
+                    q1: "주변에서 들었거나 내 머릿속에 있던 '현실적으로 어렵다'는 말은?",
+                    q2: "→ '될 때까지 해내면 확률은 100%!'로 기준을 바꾼 내 태도는?",
+                    label2: "3. [성공자 공식 흡수] 이미 해낸 롤모델 벤치마킹",
+                    q3: "내가 닮고 싶은 '잘 된 사람' 1명과 그의 핵심 습관/말투는?",
+                    q4: "그 사람의 실행 방식을 오늘 내 하루에 직접 따라 해 본 것은?",
+                    label3: "4. [100% 확률의 기록] 상위 1%의 길을 걷는 나",
+                    q5: "잘 된 사람의 시선으로 내 문제를 바라보니 어떤 해법이 보이나요?",
+                    q6: "이미 길을 증명해 준 좋은 멘토와 기준이 있음에 감사 한 줄..."
+                }
+            },
+            {
+                day: 22,
+                chapter: "제 7장 · 3주차 마스터 통합",
+                title: "DAY 22 · 확신은 결과가 만들어준다",
+                subtitle: "확신이 생길 때까지 기다리지 마라. 작은 실행과 수정이 쌓여 확신을 완성한다.",
+                concept: "운동하기 전에는 고민되지만 갔다 오면 '하길 잘했다'는 확신이 생깁니다. 확신은 머릿속에서 나오는 것이 아니라, 될 때까지 고치고 보충하며 만들어낸 작은 성공들이 쌓여 완성됩니다.",
+                mantra: "확신은 결과로써 완성된다. 작은 성공을 쌓아 다음 도전을 이끄는 강력한 증거로 삼아라.",
+                mission: "3주차 점검! 지난 21일간 내가 만들어낸 '작은 성공의 증거'들을 나열하며 확신을 단단히 다져보세요.",
+                training: [
+                    "① [선(先)실행 후(後)확신] '확신이 생기면 해야지'라는 순서를 뒤집어, 일단 실행하고 작은 결과로 확신 만들기",
+                    "② [작은 성공 리스트업] 지난 3주 동안 내가 해낸 작은 변화와 성취 3가지를 눈으로 확인하며 자존감 높이기",
+                    "③ [3주차 통합 선언] 돈·일·실행에 대한 내 새로운 기준을 한 문장으로 정리해 뇌에 각인하기"
+                ],
+                spells: ["확신은 결과가 만들어준다", "나는 이미 해내고 있는 사람이다", "작은 성공이 모여 큰 기적이 된다"],
+                worksheet: {
+                    label1: "2. [선실행 후확신] 고민을 멈추고 먼저 움직여 얻은 증거",
+                    q1: "하기 전엔 망설였지만 막상 해보니 '하길 잘했다!' 확신이 든 일은?",
+                    q2: "→ 최근 3주간 내가 만들어낸 작지만 분명한 성공의 증거 3가지는?",
+                    label2: "3. [3주차 통합 결산] 돈·일·실행에 대한 나의 새로운 기준",
+                    q3: "지난 3주 동안 내 실행력과 일하는 태도에서 가장 성장한 부분은?",
+                    q4: "작은 성공의 데이터를 바탕으로 다음 주에 도전할 더 큰 목표는?",
+                    label3: "4. [단단한 확신의 일지] 결과로 증명하는 나의 힘",
+                    q5: "불안감 대신 확신을 선택할 수 있게 된 나만의 핵심 비결은?",
+                    q6: "작은 성취들이 모여 거대한 확신이 되어가는 오늘에 감사 한 줄..."
+                }
+            },
+
+            // [4주차: 제8장~제9장 & 에필로그] 인간관계의 긍정, 사랑의 긍정, 완벽한 긍정의 증거
+            {
+                day: 23,
+                chapter: "제 8장 · 인간관계의 긍정",
+                title: "DAY 23 · 외로움은 없다, 오직 '완전한 자유'만 있을 뿐",
+                subtitle: "혼자 있는 상태는 결핍이 아니라, 누구의 눈치도 보지 않고 내 세상을 선택하는 자유다.",
+                concept: "외로움은 '혼자 있는 중립적 상태'에 사람들이 부정적 편견을 붙인 단어일 뿐입니다. 혼자 있는 완전한 자유를 충만하게 즐길 줄 아는 사람만이, 타인과 함께할 때도 건강한 관계를 선택할 수 있습니다.",
+                mantra: "혼자 있는 시간은 고독이 아니라, 내 의지대로 삶을 설계할 수 있는 찬란한 완전한 자유의 상태다.",
+                mission: "오늘 혼자만의 시간을 외로움이 아닌 '누구의 간섭도 없는 완벽한 자유 시간'으로 만끽해 보세요.",
+                training: [
+                    "① ['외로움' 단어 삭제] 혼자 있는 순간을 결핍이 아닌 '내 의지대로 100% 통제하는 완전한 자유'로 재정의하기",
+                    "② [나와 단둘이 데이트] 타인에게 의지하지 않고 오직 나 자신을 가장 친한 친구로 대하며 혼자만의 시간 즐기기",
+                    "③ [관계 분별력 키우기] 혼자서도 충만한 상태에서 내 자유를 존중해 주는 건강한 인연이 누구인지 객관적으로 바라보기"
+                ],
+                spells: ["외로움은 없다, 완전한 자유만 있다", "혼자서도 완벽히 행복한 나", "나 자신과 가장 친한 친구가 되자"],
+                worksheet: {
+                    label1: "2. [완전한 자유 만끽] 혼자 있는 시간을 100% 즐긴 기록",
+                    q1: "오늘 누구의 눈치도 보지 않고 온전히 내 의지대로 보낸 자유 시간은?",
+                    q2: "→ '외로움'이라는 편견을 지우고 나 자신을 가장 친한 친구로 대한 방법은?",
+                    label2: "3. [건강한 관계 분별력] 충만한 나에게 어울리는 인연의 기준",
+                    q3: "혼자서도 충만해지니 타인에게 의지하거나 매달리던 마음이 어떻게 변했나요?",
+                    q4: "내 자유를 존중하고 함께 시너지를 낼 수 있는 건강한 관계의 조건은?",
+                    label3: "4. [독립된 우주의 기록] 홀로 서서 빛나는 나의 하루",
+                    q5: "나 한 명만으로도 세상이 꽉 찬다고 느낀 오늘의 가장 평온한 순간은?",
+                    q6: "나에게 주어진 찬란한 완전한 자유를 누릴 수 있음에 감사 한 줄..."
+                }
+            },
+            {
+                day: 24,
+                chapter: "제 8장 · 인간관계의 긍정",
+                title: "DAY 24 · 능력을 갖춰라 & 내 욕심임을 인정하라",
+                subtitle: "내 그릇의 크기가 곧 내가 만날 인연의 수준이며, '실망'은 내 기대가 만든 욕심이다.",
+                concept: "종이컵만 한 그릇에는 바다를 담을 수 없습니다. 좋은 인연을 찾으려 헤매기 전에 내 그릇과 능력을 키우세요. 또한 상대에게 실망했다면 '내가 임의로 기대치를 설정한 내 욕심이었구나'라고 인정하세요.",
+                mantra: "타인을 향한 기대와 욕심을 내려놓는 순간, 상대의 작은 배려마저 기적 같은 선물로 다가온다.",
+                mission: "누군가에게 서운하거나 실망했던 마음을 떠올리며 '내 기대와 욕심이었구나' 하고 내려놓아 보세요.",
+                training: [
+                    "① [청구서 찢기] 내가 베푼 호의 뒤에 '저 사람도 이만큼 해주겠지'라고 적어둔 마음속 청구서 즉시 찢어버리기",
+                    "② [내 욕심 인정] 서운함과 실망이 올라올 때마다 '상대 잘못이 아니라 내 편의대로 기대한 내 욕심이었구나' 인정하기",
+                    "③ [내 그릇 키우기] 좋은 사람을 밖에서 찾기 전에 내가 먼저 함께하고 싶은 능력과 품격을 갖추는 데 집중하기"
+                ],
+                spells: ["내 그릇과 능력을 키우자", "내 기대와 욕심이었음을 인정한다", "당연한 권리는 없다, 모두 감사할 뿐"],
+                worksheet: {
+                    label1: "2. [마음속 청구서 찢기] 서운함과 실망 뒤에 숨은 내 욕심 인정",
+                    q1: "최근 누군가에게 서운하거나 실망했던 일은 무엇이었나요?",
+                    q2: "→ '내가 임의로 기대치를 만든 내 욕심이었구나!' 인정하고 찢은 청구서는?",
+                    label2: "3. [내 그릇 키우기] 좋은 인연을 담아낼 나의 능력과 품격",
+                    q3: "기대를 내려놓으니 당연하게 여겼던 상대의 배려 중 감사하게 보인 점은?",
+                    q4: "바다 같은 사람을 담아내기 위해 오늘 내 그릇을 키운 실천은?",
+                    label3: "4. [조건 없는 관계 일지] 기대를 버리고 감사를 얻은 하루",
+                    q5: "타인에게 감정의 통제권을 넘기지 않으니 관계가 얼마나 편안해졌나요?",
+                    q6: "조건 없는 다정함을 기적 같은 선물로 알아볼 수 있는 눈에 감사 한 줄..."
+                }
+            },
+            {
+                day: 25,
+                chapter: "제 8장 · 인간관계의 긍정",
+                title: "DAY 25 · 행동의 결과를 봐라 & 결핍을 사랑하라",
+                subtitle: "마음은 오직 반복된 언어와 행동으로 증명되며, 모든 성장은 결핍에서 탄생한다.",
+                concept: "말이 아닌 일관된 행동의 결과가 그 사람의 진짜 마음입니다. 또한 내가 가진 가난·부족함·아픔 같은 결핍은 불행의 씨앗이 아니라, 나를 더 나은 삶으로 이끄는 가장 강력한 성장의 원동력입니다.",
+                mantra: "결핍은 부족함이 아니라 더 나은 삶의 방향을 알려주는 이정표다. 결핍의 에너지를 성장에 써라.",
+                mission: "내가 가진 '결핍' 하나를 원망 대신 '나를 움직이게 해준 고마운 성장 이정표'로 재정의해 보세요.",
+                training: [
+                    "① [말 대신 행동 관찰] 타인의 한 번의 약속이 아니라 반복되는 언어 습관과 행동의 결과로 객관적인 데이터 읽기",
+                    "② [결핍 연료화] 내 안의 부족함·가난·아픔을 한탄하는 대신 나를 더 높은 곳으로 밀어 올리는 성장 엔진으로 쓰기",
+                    "③ [행동으로 진심 증명] 나 역시 말로만 다짐하지 않고 오늘 작은 물리적 행동 하나로 내 진심 증명하기"
+                ],
+                spells: ["결핍은 내 성장의 가장 강력한 연료다", "마음은 오직 행동으로 증명된다", "결핍 덕분에 더 단단해졌다"],
+                worksheet: {
+                    label1: "2. [결핍 연료화] 부족함과 아픔을 성장 엔진으로 전환하기",
+                    q1: "그동안 나를 위축시키거나 억울하게 만들었던 나만의 결핍은?",
+                    q2: "→ 그 결핍이 나에게 선물해 준 절실함과 성장의 방향은 무엇인가요?",
+                    label2: "3. [행동으로 진심 증명] 말이 아닌 물리적 실행으로 보여준 오늘",
+                    q3: "타인의 말이 아닌 반복된 행동을 객관적으로 관찰하며 얻은 통찰은?",
+                    q4: "나 역시 말로만 다짐하지 않고 오늘 직접 땀 흘려 실행한 행동 1가지는?",
+                    label3: "4. [결핍 사랑 성적표] 이정표를 따라 더 높이 도약한 기록",
+                    q5: "결핍을 사랑하기로 선택하자 분노와 슬픔이 어떻게 에너지로 바뀌었나요?",
+                    q6: "나를 안주하지 않고 성장하게 만들어준 모든 결핍에 감사 한 줄..."
+                }
+            },
+            {
+                day: 26,
+                chapter: "제 8장 · 인간관계의 긍정",
+                title: "DAY 26 · 끊임없이 긍정적으로 비교하라",
+                subtitle: "부러움은 질투가 아니라, 내가 더 멋진 삶을 살고 싶다는 열정의 신호다.",
+                concept: "비교가 괴로운 이유는 비교에 '나는 왜 못났을까'라는 부정적 해석을 붙였기 때문입니다. 나보다 앞선 사람을 보며 '나도 저렇게 될 수 있구나! 무엇을 배우면 될까?'라고 긍정적으로 비교하면 시행착오가 줄어듭니다.",
+                mantra: "비교에 부정적 의미를 씌우지 마라. 비교는 배움의 기회이자 더 나은 삶에 대한 열정이다.",
+                mission: "부러움을 느꼈던 대상을 질투 대신 '내가 배울 점과 벤치마킹할 공식'으로 분석해 보세요.",
+                training: [
+                    "① [부러움 재해석] 누군가 부러워질 때 '질투가 아니라 나도 잘 되고 싶다는 열정의 신호구나!'라고 반갑게 맞이하기",
+                    "② [시행착오 단축] 앞선 사람의 결과물을 보고 '저게 가능하다는 걸 증명해 줬네! 뭘 배우면 될까?' 분석하기",
+                    "③ [나만의 속도 유지] 비관 대신 긍정적 비교에서 얻은 자극을 오늘 내 실행 에너지로 전환하기"
+                ],
+                spells: ["부러움은 내 열정의 신호다", "저 사람이 해냈다면 나도 할 수 있다", "배울 점만 쏙 흡수하자"],
+                worksheet: {
+                    label1: "2. [부러움 재해석] 질투를 '성장 열정의 신호'로 맞이하기",
+                    q1: "최근 부러움이나 비교되는 감정을 느꼈던 사람이나 장면은?",
+                    q2: "→ '나도 더 멋지게 살고 싶다는 열정이 크구나!'로 바꾼 해석은?",
+                    label2: "3. [시행착오 단축 분석] 앞선 사람에게서 흡수할 배움 공식",
+                    q3: "그 사람이 결과를 내기 위해 실천했을 핵심 비결 2가지를 추측해 본다면?",
+                    q4: "비관 대신 긍정적 비교에서 얻은 자극으로 오늘 바로 실천한 일은?",
+                    label3: "4. [긍정의 복리 일지] 모든 사람을 스승으로 삼는 힘",
+                    q5: "비교에 부정적 의미를 지우고 나니 세상이 어떻게 보이기 시작했나요?",
+                    q6: "나보다 앞선 길을 보여주며 시행착오를 줄여준 모든 사람에게 감사 한 줄..."
+                }
+            },
+            {
+                day: 27,
+                chapter: "제 9장 · 사랑의 긍정",
+                title: "DAY 27 · 이해하려 할수록 멀어진다 (온전한 인정)",
+                subtitle: "나조차 내 마음을 다 모르는데, 다른 우주를 살아온 상대를 이해하겠다는 것은 자만이다.",
+                concept: "상대를 내 머리로 이해하고 바꾸려 할수록 갈등과 싸움이 생깁니다. '저 사람은 나와 완전히 다른 독립된 우주구나, 그럴 수 있지'라고 있는 그대로 인정할 때 비로소 진정한 평온과 사랑이 시작됩니다.",
+                mantra: "사랑은 내 수준을 확인하는 과정이다. 상대를 이해하려 애쓰지 말고 다른 존재로 온전히 인정하라.",
+                mission: "가까운 사람(연인·가족·친구)의 이해 안 되는 행동 하나를 고치려 하지 말고 '그럴 수 있지'로 인정해 보세요.",
+                training: [
+                    "① [우주 분리 훈련] 상대방을 내 잣대로 해석하거나 고치려는 통제를 멈추고 '나와 다른 독립된 우주'로 인정하기",
+                    "② ['맞춰간다'는 착각 버리기] 내 규칙을 강요하는 싸움 대신 '저 사람은 저런 방식을 가진 사람이구나' 수용하기",
+                    "③ [사랑의 거울 점검] 상대의 단점을 지적하는 대신 이 관계를 통해 내 인격의 그릇을 얼마나 넓힐지 돌아보기"
+                ],
+                spells: ["상대는 나와 다른 독립된 우주다", "이해 대신 온전히 인정하자", "내 그릇의 수준을 높이자"],
+                worksheet: {
+                    label1: "2. [독립된 우주 인정] 내 잣대로 고치려 했던 상대의 다름",
+                    q1: "가까운 사람(연인·가족·친구)에게 '왜 저럴까?' 이해하려 애썼던 행동은?",
+                    q2: "→ '나와 다른 독립된 우주니까 그럴 수 있지' 온전히 인정한 순간은?",
+                    label2: "3. [사랑의 거울 점검] 관계를 통해 확인하고 키운 나의 수준",
+                    q3: "상대를 통제하려는 욕심을 내려놓자 우리 사이의 대화가 어떻게 바뀌었나요?",
+                    q4: "이 관계를 통해 내가 더 성숙해지고 넓혀야 할 내 인격의 그릇은?",
+                    label3: "4. [평온한 사랑의 기록] 다름을 즐기는 성숙한 태도",
+                    q5: "상대를 있는 그대로 받아들이고 나니 내 마음이 얼마나 자유로워졌나요?",
+                    q6: "나와 다른 멋진 우주를 가진 소중한 사람이 곁에 있음에 감사 한 줄..."
+                }
+            },
+            {
+                day: 28,
+                chapter: "제 9장 · 사랑의 긍정",
+                title: "DAY 28 · 이별과 갈등 대처법: 모든 에너지를 내 성장에",
+                subtitle: "상대를 규정짓지 말고, 갈등과 이별에서 분출되는 에너지를 나를 10배 키우는 데 써라.",
+                concept: "상대를 '회피형이다, 나르시시스트다'라고 규정하며 비난하는 것은 내 통제 욕구에서 나옵니다. 관계의 아픔이나 이별이 찾아온다면 그 강력한 에너지를 100% 나의 경제력·외모·지적 역량을 업그레이드하는 데 쓰세요.",
+                mantra: "어떠한 상대를 만났든 만남 그 자체로 지혜를 얻었음에 감사하고, 모든 에너지를 나의 도약에 투자하라.",
+                mission: "관계에서 소모하던 감정 에너지를 거두어 오늘 오직 나를 10배 더 멋진 사람으로 만드는 일에 투자하세요.",
+                training: [
+                    "① [낙인찍기 중단] 상대를 회피형·나르시시스트 등으로 규정하고 비난하는 대신 '그럴 수 있지, 하나 배웠다'로 끝내기",
+                    "② [감정 에너지 100% 회수] 슬픔이나 분노로 새어 나가는 에너지를 오직 나의 실력·체력·경제력을 키우는 데 집중 투하하기",
+                    "③ [만남 자체에 감사] 지나간 인연과 갈등마저 나를 더 단단한 사람으로 빚어준 고마운 데이터로 감사하기"
+                ],
+                spells: ["상대를 규정짓지 말자", "모든 에너지를 나의 성장에 쏟자", "만남과 배움 모두 감사하다"],
+                worksheet: {
+                    label1: "2. [낙인찍기 중단] 상대를 규정짓던 마음 내려놓기",
+                    q1: "갈등이나 서운함 속에서 상대를 특정 유형으로 단정 짓고 싶었던 순간은?",
+                    q2: "→ '그럴 수 있지, 덕분에 내 기준을 하나 더 배웠다'로 정리한 문장은?",
+                    label2: "3. [에너지 100% 회수 & 도약] 나를 10배 키우는 자기 투자",
+                    q3: "관계에 소모하던 감정 에너지를 회수해 오늘 나를 위해 투자한 일은?",
+                    q4: "아픔이나 갈등을 연료 삼아 내가 10배 업그레이드할 영역(경제력·신체·지식)은?",
+                    label3: "4. [단단한 도약의 일지] 모든 만남을 지혜로 바꾼 기록",
+                    q5: "과거의 상처나 갈등이 지금의 나를 얼마나 단단하게 만들어 주었나요?",
+                    q6: "나를 더 가치 있는 사람으로 성장시켜 준 모든 인연과 배움에 감사 한 줄..."
+                }
+            },
+            {
+                day: 29,
+                chapter: "제 9장 · 사랑의 긍정",
+                title: "DAY 29 · 무조건 잘해줘라 & 상대방을 높여라",
+                subtitle: "밀당 없는 헌신은 내 내면의 풍요로움이며, 상대를 높이는 것이 곧 나의 가치다.",
+                concept: "계산 없이 최선을 다해 잘해주면 상대의 본질이 가장 빠르게 드러납니다. 또한 사랑하는 사람을 칭찬하고 높여줄 때 그 사람의 빛이 곧 나의 품격과 가치를 비추는 거울이 됩니다.",
+                mantra: "칭찬과 인정은 남을 위해서가 아니라 내 기분 좋으라고 하는 것이다. 상대를 높이는 것이 곧 나의 가치다.",
+                mission: "오늘 소중한 사람에게 조건 없는 호의와 진심 어린 칭찬을 아낌없이 선물해 보세요.",
+                training: [
+                    "① [계산 없는 헌신] 밀당이나 대가를 바라는 마음을 버리고 내가 줄 수 있는 최고의 친절과 배려를 아낌없이 건네기",
+                    "② [내가 먼저 솔선수범] 상대가 해주길 기다리며 불평하는 시간에 내가 먼저 기분 좋게 행동해 행복 선점하기",
+                    "③ [상대방 높이기] 소중한 사람의 장점과 성취를 진심으로 칭찬하고 치켜세워 내 품격과 가치 함께 높이기"
+                ],
+                spells: ["계산 없이 최선을 다해 잘해주자", "상대방을 높이는 것이 곧 나의 가치다", "칭찬과 인정이 관계를 빛낸다"],
+                worksheet: {
+                    label1: "2. [밀당 없는 헌신] 계산 없이 먼저 건넨 최고의 호의",
+                    q1: "오늘 대가를 바라지 않고 소중한 사람에게 아낌없이 베푼 친절이나 배려는?",
+                    q2: "→ 상대가 해주길 기다리는 대신 내가 먼저 기분 좋게 솔선수범한 일은?",
+                    label2: "3. [상대방 높이기 실전] 상대의 빛을 밝혀 내 가치 높이기",
+                    q3: "오늘 소중한 사람의 장점이나 성취를 진심으로 치켜세워 준 칭찬은?",
+                    q4: "상대를 귀하게 대우하고 높여주니 내 기분과 자부심이 어떻게 올라갔나요?",
+                    label3: "4. [풍요로운 사랑의 기록] 베풀수록 커지는 내면의 여유",
+                    q5: "무조건 잘해줄 수 있는 여유가 곧 내 내면의 강함임을 느낀 순간은?",
+                    q6: "아낌없이 베풀고 칭찬할 수 있는 풍요로운 마음을 가진 나에게 감사 한 줄..."
+                }
+            },
+            {
+                day: 30,
+                chapter: "에필로그 · 당신이 완벽한 긍정의 증거다",
+                title: "DAY 30 · 30일 완주! 당신이 바로 완벽한 긍정의 증거",
+                subtitle: "당신이 지금 숨 쉬며 이 노트를 완성했다는 사실 자체가 인생을 바꿀 가장 확실한 증거다.",
+                concept: "30일 동안 긍정학개론의 원리를 일상에서 선택하고 훈련해 온 당신은 이미 과거와 완전히 다른 '인생의 근육'을 갖추었습니다. 시련은 이제 나를 지혜롭게 만드는 선물이며, 생각은 언제든 1초 만에 바꿀 수 있는 당신의 무기입니다.",
+                mantra: "당신이 지금 숨 쉬고 있다는 것, 그것이 곧 당신이 원하는 삶을 살 수 있는 완벽한 긍정의 증거다.",
+                mission: "30일 챌린지 대장정을 마친 나 자신에게 최고의 찬사를 보내고, 앞으로의 긍정 선언문을 봉인하세요!",
+                training: [
+                    "① [시련을 선물로 명명] 앞으로 다가올 모든 문제와 시련을 '나를 지혜롭게 만드는 선물 퀘스트'로 환영하기",
+                    "② [1초 생각 전환 확신] 언제 어디서든 단 1초 만에 내 생각을 유리한 방향으로 바꿀 수 있는 자유 만끽하기",
+                    "③ [완벽한 긍정의 증거 선언] 숨 쉬며 30일을 완주한 나 자신을 최고의 긍정 마스터로 인정하고 졸업 봉인 찍기"
+                ],
+                spells: ["나는 완벽한 긍정의 증거다!", "시련은 나를 키우는 선물이다", "긍정! 오늘도 내가 선택한다"],
+                worksheet: {
+                    label1: "2. [30일 인생의 근육 결산] 시련을 선물로 바꾼 나의 변화",
+                    q1: "30일 전과 비교해 내 생각 습관·언어·감정 통제력에서 가장 달라진 점은?",
+                    q2: "→ 앞으로 다가올 시련을 '지혜를 주는 선물 퀘스트'로 맞이할 나의 각오는?",
+                    label2: "3. [평생의 긍정 선언문] 어떤 상황에서도 꺼내 쓸 나의 절대 주문",
+                    q3: "단 1초 만에 내 인생의 방향을 바꿀 나만의 핵심 긍정 주문 3가지는?",
+                    q4: "30일 완주를 해낸 나 자신에게 건네는 가장 뜨겁고 진심 어린 칭찬은?",
+                    label3: "4. [완벽한 긍정의 증거 봉인] 새로운 인생의 첫 페이지",
+                    q5: "숨 쉬며 이 노트를 완성한 내가 앞으로 만들어갈 최고의 현실은?",
+                    q6: "완벽한 긍정의 증거가 되어준 나 자신과 모든 인연에 감사 한 줄..."
+                }
+            }
+        ];
+
+        // =========================================================
+        // 2. 상태 관리 및 스토리지 설정
+        // =========================================================
+        const STORAGE_PREFIX = 'positive_intro_30d_day_';
+        const ACTIVE_DAY_KEY = 'positive_intro_30d_active_day';
+        const THEME_KEY = 'positive_intro_30d_ink_theme';
+
+        const INK_THEMES = [
+            { id: 'sepia', label: '딥 세피아 잉크', className: '' },
+            { id: 'gold', label: '마법 금빛 잉크', className: 'theme-gold-ink' },
+            { id: 'emerald', label: '에메랄드 잉크', className: 'theme-emerald-ink' }
+        ];
+
+        let currentDay = parseInt(localStorage.getItem(ACTIVE_DAY_KEY) || '1', 10);
+        if (currentDay < 1 || currentDay > 30) currentDay = 1;
+
+        let currentInkIndex = parseInt(localStorage.getItem(THEME_KEY) || '0', 10) % INK_THEMES.length;
+        let currentWaxStamped = false;
+        let currentPracticeScore = 0;
+        let saveTimeout = null;
+        let isFlipping = false;
+
+        function getTodayStr() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        // =========================================================
+        // 3. 표지 열기 / 닫기 3D 전환
+        // =========================================================
+        function openBook() {
+            const cover = document.getElementById('book-cover');
+            const coverView = document.getElementById('cover-view');
+            const plannerView = document.getElementById('planner-view');
+
+            coverView.classList.remove('floating');
+            cover.classList.add('opened');
+
+            setTimeout(() => {
+                coverView.classList.add('hidden');
+                plannerView.classList.remove('hidden');
+                plannerView.classList.add('flex');
+                loadDayData(currentDay);
+                updateOverallProgress();
+                lucide.createIcons();
+            }, 650);
+        }
+
+        function closeBook() {
+            const cover = document.getElementById('book-cover');
+            const coverView = document.getElementById('cover-view');
+            const plannerView = document.getElementById('planner-view');
+
+            plannerView.classList.add('hidden');
+            plannerView.classList.remove('flex');
+            coverView.classList.remove('hidden');
+
+            void cover.offsetWidth;
+            cover.classList.remove('opened');
+            setTimeout(() => {
+                coverView.classList.add('floating');
+            }, 800);
+        }
+
+        // =========================================================
+        // 4. 3D 책장 넘김 입체 모션 및 일차(Day) 이동
+        // =========================================================
+        function triggerPageFlipEffect(direction, targetDay) {
+            if (isFlipping) return;
+            isFlipping = true;
+
+            const container = document.getElementById('flip-animation-container');
+            const leaf = document.createElement('div');
+            leaf.className = `flip-leaf ${direction > 0 ? 'flip-next' : 'flip-prev'}`;
+
+            const curItem = CURRICULUM_30[currentDay - 1];
+            const nextItem = CURRICULUM_30[targetDay - 1];
+
+            leaf.innerHTML = `
+                <div class="flip-leaf-front">
+                    <div class="flex justify-between items-center border-b border-[#8b6635]/30 pb-2 text-xs text-[#1b2c4a] font-extrabold">
+                        <span>긍정학개론 30일 챌린지</span>
+                        <span>DAY ${String(curItem.day).padStart(2, '0')}</span>
+                    </div>
+                    <div class="my-auto space-y-3 opacity-60">
+                        <p class="text-sm font-bold text-[#1b2c4a]">${curItem.title}</p>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                    </div>
+                    <div class="text-right text-[11px] text-[#5c3a1e] italic">책장 넘어가는 중...</div>
+                </div>
+                <div class="flip-leaf-back">
+                    <div class="flex justify-between items-center border-b border-[#8b6635]/30 pb-2 text-xs text-[#1b2c4a] font-extrabold">
+                        <span>DAY ${String(nextItem.day).padStart(2, '0')}</span>
+                        <span>긍정학개론 30일 챌린지</span>
+                    </div>
+                    <div class="my-auto space-y-3 opacity-60">
+                        <p class="text-sm font-bold text-[#8c2d19]">${nextItem.title}</p>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                        <div class="border-b border-[#5c3a1e]/35 h-6"></div>
+                    </div>
+                    <div class="text-left text-[11px] text-[#5c3a1e] italic">새로운 훈련 페이지</div>
+                </div>
+            `;
+
+            container.appendChild(leaf);
+
+            setTimeout(() => {
+                leaf.remove();
+                isFlipping = false;
+            }, 860);
+        }
+
+        function changeDay(offset) {
+            if (isFlipping) return;
+            const targetDay = currentDay + offset;
+            if (targetDay < 1 || targetDay > 30) return;
+
+            triggerPageFlipEffect(offset, targetDay);
+            setTimeout(() => {
+                loadDayData(targetDay);
+            }, 340);
+        }
+
+        function onDaySelected(val) {
+            const targetDay = parseInt(val, 10);
+            if (isNaN(targetDay) || targetDay === currentDay || isFlipping) return;
+            const direction = targetDay > currentDay ? 1 : -1;
+            triggerPageFlipEffect(direction, targetDay);
+            setTimeout(() => {
+                loadDayData(targetDay);
+            }, 340);
+        }
+
+        // =========================================================
+        // 5. 일차별 데이터 로드 & 원클릭 긍정 주문 각인 & 자동 저장
+        // =========================================================
+        function initDaySelector() {
+            const selector = document.getElementById('day-selector');
+            selector.innerHTML = CURRICULUM_30.map(item => {
+                const dayNum = String(item.day).padStart(2, '0');
+                const shortTitle = item.title.replace(/^DAY \d+\s*·\s*/, '');
+                return `<option value="${item.day}">DAY ${dayNum} · ${shortTitle}</option>`;
+            }).join('');
+        }
+
+        function loadDayData(dayNum) {
+            currentDay = dayNum;
+            localStorage.setItem(ACTIVE_DAY_KEY, String(currentDay));
+
+            const selector = document.getElementById('day-selector');
+            if (selector) selector.value = String(currentDay);
+
+            const lesson = CURRICULUM_30[currentDay - 1];
+            document.getElementById('chapter-badge').textContent = lesson.chapter;
+            document.getElementById('day-main-title').textContent = lesson.title;
+            document.getElementById('day-subtitle').textContent = lesson.subtitle;
+            document.getElementById('lesson-concept').textContent = lesson.concept;
+            document.getElementById('lesson-mantra').textContent = `"${lesson.mantra}"`;
+            document.getElementById('mission-guide').textContent = `오늘의 미션: ${lesson.mission}`;
+
+            // 오늘 주제 맞춤 3단계 실전 훈련법 렌더링
+            const trainingContainer = document.getElementById('training-steps');
+            if (trainingContainer && lesson.training) {
+                trainingContainer.innerHTML = lesson.training.map(step => `
+                    <li class="flex items-start gap-1.5">
+                        <span class="text-[#8c2d19] font-extrabold shrink-0">✦</span>
+                        <span>${step}</span>
+                    </li>
+                `).join('');
+            }
+
+            // 입력창 라벨 및 플레이스홀더를 해당 일차 주제에 맞게 100% 맞춤 적용
+            if (lesson.worksheet) {
+                const ws = lesson.worksheet;
+                const l1 = document.getElementById('ws-label-1');
+                const l2 = document.getElementById('ws-label-2');
+                const l3 = document.getElementById('ws-label-3');
+                if (l1) l1.textContent = ws.label1;
+                if (l2) l2.textContent = ws.label2;
+                if (l3) l3.textContent = ws.label3;
+
+                const fTrigger = document.querySelector('[data-field="triggerEvent"]');
+                const fAccept = document.querySelector('[data-field="acceptanceShift"]');
+                const fSpeech1 = document.querySelector('[data-field="positiveSpeech1"]');
+                const fSpeech2 = document.querySelector('[data-field="positiveSpeech2"]');
+                const fResult = document.querySelector('[data-field="resultReview"]');
+                const fGratitude = document.querySelector('[data-field="gratitudeClosing"]');
+
+                if (fTrigger) fTrigger.placeholder = ws.q1;
+                if (fAccept) fAccept.placeholder = ws.q2;
+                if (fSpeech1) fSpeech1.placeholder = ws.q3;
+                if (fSpeech2) fSpeech2.placeholder = ws.q4;
+                if (fResult) fResult.placeholder = ws.q5;
+                if (fGratitude) fGratitude.placeholder = ws.q6;
+            }
+
+            // 오늘의 추천 긍정 주문 칩 렌더링
+            const chipsContainer = document.getElementById('spell-chips');
+            chipsContainer.innerHTML = lesson.spells.map(spell => `
+                <button type="button" onclick="castPositiveSpell('${spell.replace(/'/g, "\\'")}')"
+                        class="spell-chip px-2.5 py-1 rounded-full bg-[#1b2c4a] hover:bg-[#28406b] text-[#fcf6ba] text-xs font-bold shadow-sm cursor-pointer">
+                    + "${spell}"
+                </button>
+            `).join('');
+
+            // 이전/다음 버튼 활성 상태 조절
+            document.getElementById('prev-day-btn').style.opacity = currentDay === 1 ? '0.35' : '1';
+            document.getElementById('next-day-btn').style.opacity = currentDay === 30 ? '0.35' : '1';
+
+            // 저장된 데이터 불러오기
+            let saved = {};
+            try {
+                const raw = localStorage.getItem(STORAGE_PREFIX + currentDay);
+                if (raw) saved = JSON.parse(raw);
+            } catch (e) {}
+
+            document.querySelectorAll('.magic-input').forEach(input => {
+                const f = input.dataset.field;
+                input.value = saved[f] || '';
+            });
+
+            document.getElementById('practice-date').value = saved._practiceDate || getTodayStr();
+            currentWaxStamped = Boolean(saved._waxStamped);
+            currentPracticeScore = Number(saved._practiceScore) || 0;
+            renderPracticeScoreUI();
+            renderWaxSealUI(false);
+
+            const statusEl = document.getElementById('save-status');
+            const hasText = Object.entries(saved).some(([k, v]) => !k.startsWith('_') && typeof v === 'string' && v.trim() !== '');
+            if (hasText || currentWaxStamped || currentPracticeScore > 0) {
+                statusEl.innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-800"></i> 양피지에 봉인됨`;
+            } else {
+                statusEl.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#8c2d19]"></i> 기록 대기 중`;
+            }
+            lucide.createIcons();
+        }
+
+        function setPracticeScore(score) {
+            currentPracticeScore = currentPracticeScore === score ? 0 : score;
+            renderPracticeScoreUI();
+            saveCurrentDayData();
+        }
+
+        function renderPracticeScoreUI() {
+            const container = document.getElementById('score-buttons');
+            const badge = document.getElementById('practice-score-badge');
+            const comment = document.getElementById('practice-score-comment');
+            if (!container) return;
+
+            let html = '';
+            for (let i = 1; i <= 10; i++) {
+                const isSelected = i <= currentPracticeScore;
+                const btnClass = isSelected
+                    ? 'bg-gradient-to-b from-[#1b2c4a] to-[#8c2d19] text-[#fcf6ba] border-[#d4af37] font-extrabold shadow-sm'
+                    : 'bg-[#efe1c6] hover:bg-[#e5d1ab] text-[#5c3a1e] border-[#b89664]/60 font-bold';
+                html += `
+                    <button type="button" onclick="setPracticeScore(${i})"
+                            class="score-pill py-1.5 rounded-lg border text-xs cursor-pointer ${btnClass}"
+                            title="실천 점수 ${i}점">
+                        ${i}
+                    </button>
+                `;
+            }
+            container.innerHTML = html;
+
+            if (currentPracticeScore === 0) {
+                badge.textContent = '점수 선택 전';
+                badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-[#1b2c4a]/10 text-[#1b2c4a]';
+                comment.textContent = '오늘 하루 긍정학개론 원리를 얼마나 선택하고 실천했는지 1~10점으로 체크해 보세요!';
+            } else {
+                badge.textContent = `★ ${currentPracticeScore} / 10점`;
+                badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-[#8c2d19] text-[#fcf6ba]';
+                if (currentPracticeScore >= 9) {
+                    comment.textContent = '완벽한 긍정의 증거! 오늘 하루 내 감정과 결과의 통제권을 100% 쥐셨습니다!';
+                } else if (currentPracticeScore >= 7) {
+                    comment.textContent = '훌륭합니다! 긍정 근육이 탄탄하게 자라고 있어요. 내일은 1점 더 높여볼까요?';
+                } else if (currentPracticeScore >= 4) {
+                    comment.textContent = '좋은 시도입니다! 처음이라 서툰 게 당연하니 오늘 배운 점을 데이터로 삼아보세요.';
+                } else {
+                    comment.textContent = '그럴 수 있지! 점수를 기록한 것만으로도 이미 변화가 시작되었습니다. 하나 배운 거지!';
+                }
+            }
+        }
+
+        // 긍정 주문 칩 클릭 시 빈 입력칸 또는 선언칸에 손글씨 잉크로 자동 각인
+        function castPositiveSpell(spellText) {
+            const targets = [
+                document.querySelector('[data-field="acceptanceShift"]'),
+                document.querySelector('[data-field="positiveSpeech1"]'),
+                document.querySelector('[data-field="morningDeclaration"]')
+            ];
+
+            let chosen = targets.find(el => el && el.value.trim() === '') || targets[0];
+            if (chosen) {
+                const cur = chosen.value.trim();
+                chosen.value = cur ? `${cur} / ${spellText}` : spellText;
+                chosen.classList.remove('ink-writing');
+                void chosen.offsetWidth;
+                chosen.classList.add('ink-writing');
+                chosen.focus();
+                saveCurrentDayData();
+            }
+        }
+
+        function saveCurrentDayData() {
+            const data = {
+                _waxStamped: currentWaxStamped,
+                _practiceScore: currentPracticeScore,
+                _practiceDate: document.getElementById('practice-date').value || getTodayStr()
+            };
+            let hasContent = currentWaxStamped || currentPracticeScore > 0;
+
+            document.querySelectorAll('.magic-input').forEach(input => {
+                const val = input.value;
+                data[input.dataset.field] = val;
+                if (val.trim() !== '') hasContent = true;
+            });
+
+            try {
+                if (hasContent) {
+                    localStorage.setItem(STORAGE_PREFIX + currentDay, JSON.stringify(data));
+                } else {
+                    localStorage.removeItem(STORAGE_PREFIX + currentDay);
+                }
+            } catch (e) {}
+
+            const statusEl = document.getElementById('save-status');
+            statusEl.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-800 animate-spin"></i> 잉크 스며드는 중...`;
+            lucide.createIcons();
+
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                statusEl.innerHTML = hasContent
+                    ? `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-800"></i> 양피지에 자동 저장됨`
+                    : `<i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#8c2d19]"></i> 기록 대기 중`;
+                lucide.createIcons();
+                updateOverallProgress();
+            }, 420);
+        }
+
+        function toggleWaxSeal() {
+            currentWaxStamped = !currentWaxStamped;
+            renderWaxSealUI(currentWaxStamped);
+            saveCurrentDayData();
+        }
+
+        function renderWaxSealUI(animate) {
+            const btn = document.getElementById('wax-seal-btn');
+            const icon = document.getElementById('wax-seal-icon');
+            const title = document.getElementById('wax-seal-title');
+            const sub = document.getElementById('wax-seal-sub');
+
+            if (currentWaxStamped) {
+                btn.className = 'wax-seal-btn flex items-center gap-2.5 px-4 py-2 rounded-full border-2 border-[#d4af37] bg-gradient-to-r from-[#1b2c4a] to-[#8c1d18] text-[#fcf6ba] shadow-lg cursor-pointer shrink-0';
+                icon.className = `w-8 h-8 rounded-full flex items-center justify-center bg-[#d4af37] text-[#13213c] font-extrabold text-base shadow-inner ${animate ? 'wax-stamped' : ''}`;
+                icon.textContent = '★';
+                title.textContent = `DAY ${String(currentDay).padStart(2, '0')} 수련 봉인!`;
+                sub.className = 'text-[10px] text-[#fcf6ba]';
+                sub.textContent = '긍정의 근육 적립 완료';
+            } else {
+                btn.className = 'wax-seal-btn flex items-center gap-2 px-3.5 py-2 rounded-full border-2 border-[#1b2c4a]/50 bg-[#efe1c6] hover:bg-[#e5d1ab] text-[#1b2c4a] shadow-sm cursor-pointer shrink-0';
+                icon.className = 'w-8 h-8 rounded-full flex items-center justify-center bg-[#1b2c4a]/15 text-[#1b2c4a] font-extrabold text-sm';
+                icon.textContent = '✦';
+                title.textContent = 'Day 수련 완료 도장';
+                sub.className = 'text-[10px] text-[#5c3a1e]';
+                sub.textContent = '클릭하여 오늘 챌린지 봉인';
+            }
+        }
+
+        function updateOverallProgress() {
+            let completedCount = 0;
+            for (let d = 1; d <= 30; d++) {
+                try {
+                    const raw = localStorage.getItem(STORAGE_PREFIX + d);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        const hasText = Object.entries(parsed).some(([k, v]) => !k.startsWith('_') && typeof v === 'string' && v.trim() !== '');
+                        if (parsed._waxStamped || hasText) completedCount++;
+                    }
+                } catch (e) {}
+            }
+            const pct = Math.round((completedCount / 30) * 100);
+            document.getElementById('progress-summary').textContent = `30일 완주율: ${completedCount} / 30일 (${pct}%)`;
+            const modalText = document.getElementById('modal-streak-text');
+            if (modalText) modalText.textContent = `${completedCount} / 30일 완료 (${pct}%)`;
+        }
+
+        // =========================================================
+        // 6. 30일 여정 목차 모달 & 잉크 테마 & 초기화
+        // =========================================================
+        function toggleCurriculumModal() {
+            const modal = document.getElementById('curriculum-modal');
+            if (modal.classList.contains('hidden')) {
+                renderCurriculumGrid();
+                updateOverallProgress();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function renderCurriculumGrid() {
+            const grid = document.getElementById('curriculum-grid');
+            grid.innerHTML = CURRICULUM_30.map(item => {
+                let isStamped = false;
+                let hasNote = false;
+                let savedScore = 0;
+                try {
+                    const raw = localStorage.getItem(STORAGE_PREFIX + item.day);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        isStamped = Boolean(parsed._waxStamped);
+                        savedScore = Number(parsed._practiceScore) || 0;
+                        hasNote = Object.entries(parsed).some(([k, v]) => !k.startsWith('_') && typeof v === 'string' && v.trim() !== '');
+                    }
+                } catch (e) {}
+
+                const isCurrent = item.day === currentDay;
+                const borderClass = isCurrent
+                    ? 'border-[#d4af37] bg-[#223559]'
+                    : isStamped
+                        ? 'border-emerald-500/45 bg-[#16273d]'
+                        : 'border-[#d4af37]/25 bg-[#18253d] hover:bg-[#203150]';
+
+                const scoreText = savedScore > 0 ? ` · ${savedScore}점` : '';
+                const badge = isStamped
+                    ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">★ 봉인 완료${scoreText}</span>`
+                    : (hasNote || savedScore > 0)
+                        ? `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold">✎ 수련 중${scoreText}</span>`
+                        : '<span class="px-2 py-0.5 rounded-full bg-white/10 text-[#e5dec9]/60 text-[10px]">미완료</span>';
+
+                return `
+                    <button onclick="selectDayFromModal(${item.day})" class="text-left p-3.5 rounded-xl border ${borderClass} transition flex flex-col justify-between gap-1.5 cursor-pointer">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-bold text-[#d4af37]">${item.chapter}</span>
+                            ${badge}
+                        </div>
+                        <div class="text-sm font-bold text-[#fcf6ba]">${item.title}</div>
+                        <div class="text-xs text-[#e5dec9]/75 line-clamp-1">${item.subtitle}</div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectDayFromModal(dayNum) {
+            toggleCurriculumModal();
+            if (dayNum !== currentDay && !isFlipping) {
+                const direction = dayNum > currentDay ? 1 : -1;
+                triggerPageFlipEffect(direction, dayNum);
+                setTimeout(() => loadDayData(dayNum), 340);
+            }
+        }
+
+        function applyInkTheme() {
+            const book = document.getElementById('parchment-book');
+            const label = document.getElementById('ink-label');
+            INK_THEMES.forEach(t => { if (t.className) book.classList.remove(t.className); });
+            const active = INK_THEMES[currentInkIndex];
+            if (active.className) book.classList.add(active.className);
+            label.textContent = active.label;
+        }
+
+        function toggleInkTheme() {
+            currentInkIndex = (currentInkIndex + 1) % INK_THEMES.length;
+            localStorage.setItem(THEME_KEY, String(currentInkIndex));
+            applyInkTheme();
+        }
+
+        function openResetConfirm() {
+            document.getElementById('reset-modal').classList.remove('hidden');
+        }
+
+        function closeResetConfirm() {
+            document.getElementById('reset-modal').classList.add('hidden');
+        }
+
+        function confirmResetCurrentDay() {
+            localStorage.removeItem(STORAGE_PREFIX + currentDay);
+            loadDayData(currentDay);
+            updateOverallProgress();
+            closeResetConfirm();
+        }
+
+        // 모바일 터치 스와이프 책장 넘김
+        function initTouchSwipe() {
+            const bookEl = document.getElementById('parchment-book');
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            bookEl.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            bookEl.addEventListener('touchend', (e) => {
+                if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+                const diffX = e.changedTouches[0].screenX - touchStartX;
+                const diffY = e.changedTouches[0].screenY - touchStartY;
+
+                if (Math.abs(diffX) > 65 && Math.abs(diffX) > Math.abs(diffY) * 1.4) {
+                    if (diffX < 0) changeDay(1);
+                    else changeDay(-1);
+                }
+            }, { passive: true });
+        }
+
+        // 배경 금빛 마법 먼지 파티클
+        function initMagicParticles() {
+            const canvas = document.getElementById('magic-particles');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const count = Math.min(75, Math.floor(window.innerWidth / 18));
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 2.2 + 0.6,
+                    dx: (Math.random() - 0.5) * 0.35,
+                    dy: -Math.random() * 0.45 - 0.1,
+                    alpha: Math.random() * 0.7 + 0.2,
+                    pulse: Math.random() * Math.PI * 2
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.dx;
+                    p.y += p.dy;
+                    p.pulse += 0.03;
+
+                    if (p.y < -10) p.y = canvas.height + 10;
+                    if (p.x < -10) p.x = canvas.width + 10;
+                    if (p.x > canvas.width + 10) p.x = -10;
+
+                    const alpha = p.alpha * (0.6 + 0.4 * Math.sin(p.pulse));
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(252, 246, 186, ${alpha})`;
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#d4af37';
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // 초기화
+        window.addEventListener('DOMContentLoaded', () => {
+            initDaySelector();
+            lucide.createIcons();
+            initMagicParticles();
+            applyInkTheme();
+            initTouchSwipe();
+
+            document.querySelectorAll('.magic-input').forEach(input => {
+                input.addEventListener('input', () => {
+                    input.classList.remove('ink-writing');
+                    void input.offsetWidth;
+                    input.classList.add('ink-writing');
+                    saveCurrentDayData();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

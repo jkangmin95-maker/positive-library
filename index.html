@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>긍정 서재</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af37; --gold-soft: rgba(212, 175, 55, 0.55); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            padding: 3rem 1.5rem;
+            background: radial-gradient(ellipse at 50% 30%, #1a1a2e 0%, #0b0b14 70%);
+            color: #f3e9c8;
+            font-family: 'Gowun Batang', serif;
+        }
+        header { text-align: center; }
+        header p { letter-spacing: 0.4em; font-size: 0.75rem; color: var(--gold-soft); margin-bottom: 0.75rem; }
+        header h1 { font-family: 'Nanum Myeongjo', serif; font-weight: 800; font-size: clamp(1.8rem, 5vw, 2.6rem); color: var(--gold); }
+        .shelf { display: flex; flex-wrap: wrap; justify-content: center; gap: 2.5rem; }
+        .book {
+            width: min(260px, 78vw);
+            aspect-ratio: 3 / 4;
+            padding: 1.1rem;
+            border-radius: 6px 12px 12px 6px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 6px 0 10px rgba(0, 0, 0, 0.35);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .book:hover, .book:focus-visible {
+            transform: translateY(-10px) rotate(-1.5deg);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(212, 175, 55, 0.25), inset 6px 0 10px rgba(0, 0, 0, 0.35);
+            outline: none;
+        }
+        .book.planner { background: linear-gradient(135deg, #26262b, #121214); }
+        .book.intro { background: linear-gradient(135deg, #1f3566, #101d3d); }
+        .frame {
+            height: 100%;
+            border: 1px solid var(--gold-soft);
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .frame small { letter-spacing: 0.25em; font-size: 0.6rem; color: var(--gold-soft); }
+        .frame h2 { font-family: 'Nanum Myeongjo', serif; font-weight: 800; font-size: 1.7rem; color: var(--gold); }
+        .frame span { font-size: 0.85rem; line-height: 1.6; color: #e6dcc0; }
+        .frame em { font-style: normal; font-size: 0.75rem; color: var(--gold-soft); margin-top: 0.8rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <p>POSITIVE LIBRARY</p>
+        <h1>긍정 서재</h1>
+    </header>
+    <main class="shelf">
+        <a class="book planner" href="positive_planner.html">
+            <div class="frame">
+                <small>THE FIVE MINUTE MIRACLE</small>
+                <h2>긍정 플래너</h2>
+                <span>5분 기적 노트</span>
+                <em>✦ 눌러서 펼치기 ✦</em>
+            </div>
+        </a>
+        <a class="book intro" href="positive_intro_30days.html">
+            <div class="frame">
+                <small>30 DAYS MAGIC CHALLENGE</small>
+                <h2>긍정학개론</h2>
+                <span>30일 마법 챌린지 노트</span>
+                <em>✦ 눌러서 펼치기 ✦</em>
+            </div>
+        </a>
+    </main>
+</body>
+</html>
